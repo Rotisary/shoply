@@ -1,0 +1,9 @@
+{% for product in products %}
+    <ul>
+        <li>{{ product.seller }}</li>
+        <li>{{ product.name }}</li>
+        <img src="{{ product.image.url }}" >
+        <li>{{ product.price }}</li>
+        <li>{{ product.stock }}</li>
+    </ul>
+{% endfor %}
