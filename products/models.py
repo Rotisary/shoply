@@ -1,9 +1,29 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Product(models.Model):
+    ELECTRONICS = "EL"
+    ARTS = "AR"
+    BEAUTY = "BE"
+    CLOTHINGS = "CL"
+    ACCESSORIES = "AC"
+    TOYS = "TY"
+    SPORTS = "SP"
+    HOME_PRODUCTS = "HP"
+    CATEGORY_CHOICES = [
+        (ELECTRONICS, 'Electronics'),
+        (ARTS, 'Arts&Crafts'),
+        (BEAUTY, 'Beauty'),
+        (CLOTHINGS, 'Clothings'),
+        (ACCESSORIES, 'Accessories'),
+        (TOYS, 'Toys&Games'),
+        (SPORTS, 'Sports&Outdoor'),
+        (HOME_PRODUCTS, 'Home Products'),
+    ]
     seller = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=25)
+    category = models.CharField(max_length=25, choices=CATEGORY_CHOICES, default=ELECTRONICS)
+    name = models.CharField(max_length=100)
     image = models.ImageField(default='product_default.png', upload_to='product_pics')
     price = models.FloatField()
     stock = models.IntegerField()
