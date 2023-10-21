@@ -7,5 +7,5 @@ from .forms import UserRegisterForm
 @receiver(post_save, sender=User)
 def add_to_group(sender, instance, created, **kwargs):
     if created:
-            group = Group.objects.get(name='seller')
-            instance.groups.add(group)
+        group = Group.objects.get(name='seller')
+        instance.groups.add(group)

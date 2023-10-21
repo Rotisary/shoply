@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from .models import Product
+from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 
 def products_list(request):
@@ -54,3 +56,49 @@ def home_products_list(request):
     products = Product.objects.filter(category='HP')
     context = {'products': products } 
     return render(request, 'products/home_products.html', context)
+
+
+class ProductCreateView(CreateView):
+    model = Product
+    fields = ['name', 'category', 'price', 'stock', 'image']
+
+    
+    def form_valid(self, form):
+        form.instance.seller = self.request.user
+        return super().form_valid(form)
+
+
+
+class ProductDetailView(DetailView):
+    model = Product
+    context_object_name = 'product'
+
+
+class ProductUpdateView(UserPassesTestMixin, UpdateView):
+    model = Product
+    fields = ['name', 'category', 'price', 'stock', 'image']
+
+    def form_valid(self, form):
+        form.instance.seller = self.request.user
+        return super().form_valid(form)
+
+
+    def test_func(self):
+        product = self.get_object()
+        if self.request.user == product.seller:
+            return True
+        else:
+            return False
+
+
+class ProductDeleteView(UserPassesTestMixin, DeleteView):
+    model = Product
+    success_url = '/'
+
+
+    def test_func(self):
+        product = self.get_object()
+        if self.request.user == product.seller:
+            return True
+        else:
+            return False
