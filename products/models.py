@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.urls import reverse
 
 
@@ -22,16 +22,17 @@ class Product(models.Model):
         (SPORTS, 'Sports&Outdoor'),
         (HOME_PRODUCTS, 'Home Products'),
     ]
-    seller = models.ForeignKey(User, on_delete=models.CASCADE)
+    seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     category = models.CharField(max_length=25, choices=CATEGORY_CHOICES, default=ELECTRONICS)
     name = models.CharField(max_length=100)
     image = models.ImageField(default='product_default.png', upload_to='product_pics')
     price = models.FloatField()
     stock = models.IntegerField()
+    listed = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.name}"
 
     
     def get_absolute_url(self):
-        return reverse('products')
+        return reverse('product-detail', kwargs={'pk': self.pk})

@@ -71,11 +71,11 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'shoply.wsgi.application'
-
+AUTH_USER_MODEL = "users.CustomUser"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-DB_NAME = "shoply"
+DB_NAME = "shoply_db"
 DB_USER = "django"
 DB_PASSWORD = "password"
 DATABASES = {

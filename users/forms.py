@@ -1,12 +1,12 @@
 from django import forms
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm 
+from users.models import CustomUser
 
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
 
-
     class Meta:
-        model = User
-        fields = ['first_name', 'last_name', 'username', 'email',  'password1', 'password2']
+        model = CustomUser
+        fields = ['first_name', 'last_name', 'username', 'email',  'password1', 'password2','user_type']
