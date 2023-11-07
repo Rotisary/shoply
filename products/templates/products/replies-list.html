@@ -1,0 +1,6 @@
+<a href="{% url 'drop-reply' review.id %}">Drop A Reply</a>
+{% for reply in replies %}
+   <ul>
+     <li>{{ reply.text }}</li>
+   </ul>
+{% endfor %}

@@ -1,0 +1,5 @@
+<form action="{% url 'drop-review' product.id %}" method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit">drop your review</button>
+</form>

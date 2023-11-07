@@ -10,6 +10,8 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('login/', views.LoginPage, name='login'),
     path('logout/', views.LogoutPage, name='logout'),
+    path('wishlist/add/<int:pk>/', views.add_to_wishlist, name='add-to-wishlist'),
+    path('favourite/add/<str:username>/', views.add_to_favourites, name='add-to-favourites'),
     path('', include('products.urls'))
 ]
 

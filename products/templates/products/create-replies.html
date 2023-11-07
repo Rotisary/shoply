@@ -1,0 +1,5 @@
+<form action="{% url 'drop-reply' review.id %}" method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit">drop your reply</button>
+</form>

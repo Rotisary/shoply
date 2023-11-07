@@ -19,4 +19,8 @@ urlpatterns = [
     path('product/<int:pk>/detail/', ProductDetailView.as_view(), name='product-detail'),
     path('product/<int:pk>/update/', ProductUpdateView.as_view(), name='product-update'),
     path('product/<int:pk>/delete/', ProductDeleteView.as_view(), name='product-delete'),
+    path('product/<int:pk>/drop-review/', views.ProductReviewView, name='drop-review'),
+    path('product/<int:pk>/reviews/', views.ReviewListView, name='reviews'),
+    path('review/<int:pk>/reply/', views.ReviewReplyView, name='drop-reply'),
+    path('review/<int:pk>/replies/', views.ReplyListView, name='replies'),
 ]

@@ -1,0 +1,8 @@
+<a href="{% url 'drop-review' product.id %}">Drop A Review</a>
+{% for review in reviews %}
+    <ul>
+      <li>{{ review.body }}</li>
+    </ul>
+    <a href="{% url 'drop-reply' review.id %}">drop reply</a>
+    <a href="{% url 'replies' review.id %}">replies</a> 
+{% endfor %}

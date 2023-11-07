@@ -36,3 +36,25 @@ class Product(models.Model):
     
     def get_absolute_url(self):
         return reverse('product-detail', kwargs={'pk': self.pk})
+
+
+class Review(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    body = models.CharField(max_length=100)
+
+    
+    def __str__(self):
+        return f"{self.product.name}'s review, review  No: {self.id}"
+
+
+class Reply(models.Model):
+    review = models.ForeignKey(Review, on_delete=models.CASCADE)
+    replier = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    text = models.CharField(max_length=100)
+
+
+    def __str__(self):
+        return f"{self.review.id}'s reply, reply No: {self.id}"
+
+    

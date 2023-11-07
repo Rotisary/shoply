@@ -1,10 +1,14 @@
-from django.shortcuts import render, HttpResponseRedirect
-from .models import Product
+from django.shortcuts import render, redirect, HttpResponseRedirect, get_object_or_404
+from .models import Product, Review, Reply
+from .forms import ReviewForm, ReplyForm
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.conf import settings
+from django.utils.decorators import method_decorator
+from users.decorators import allowed_users
+from django.urls import reverse
 
-user = settings.AUTH_USER_MODEL
+
+@allowed_users(allowed_roles=['seller'])
 def inventory_list(request):
     products = Product.objects.filter(seller=request.user)
     context = {'products': products } 
@@ -75,7 +79,7 @@ def home_products_list(request):
     context = {'products': products } 
     return render(request, 'products/home_products.html', context)
 
-
+@method_decorator(allowed_users(allowed_roles=['seller']), name="dispatch")
 class ProductCreateView(CreateView):
     model = Product
     fields = ['name', 'category', 'price', 'stock', 'image']
@@ -119,3 +123,63 @@ class ProductDeleteView(UserPassesTestMixin, DeleteView):
             return True
         else:
             return False
+
+
+def ProductReviewView(request, pk):
+    product = get_object_or_404(Product, id=pk)
+    if request.method == "POST":
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.product = product
+            review.writer = request.user
+            review.save()
+            # return reverse ('reviews', {'pk': pk})
+    else:
+        form = ReviewForm()
+    
+    context = {
+        'form': form,
+        'product': product,
+    }
+    return render (request, 'products/create-reviews.html', context)
+
+
+def ReviewListView(request, pk):
+    product = Product.objects.filter(id=pk).first()
+    reviews = Review.objects.filter(product=pk)
+    context = {
+        'reviews': reviews,
+        'product': product
+    }
+    return render(request, 'products/reviews-list.html', context)
+        
+
+def ReviewReplyView(request, pk):
+    review = get_object_or_404(Review, id=pk)
+    if request.method == "POST":
+        form = ReplyForm(request.POST)
+        if form.is_valid():
+            reply = form.save(commit=False)
+            reply.review = review
+            reply.replier = request.user
+            reply.save()
+            # return reverse ('reviews', {'pk': pk})
+    else:
+        form = ReplyForm()
+    
+    context = {
+        'form': form,
+        'review': review,
+    }
+    return render (request, 'products/create-replies.html', context)
+
+
+def ReplyListView(request, pk):
+    review = Review.objects.filter(id=pk).first()
+    replies = Reply.objects.filter(review=pk)
+    context = {
+        'replies': replies,
+        'review': review
+    }
+    return render(request, 'products/replies-list.html', context)
