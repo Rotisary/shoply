@@ -3,6 +3,11 @@
     <ul>
       <li>{{ review.body }}</li>
     </ul>
-    <a href="{% url 'drop-reply' review.id %}">drop reply</a>
+    {% if review.writer == user %}
+      <a href="{% url 'review-delete' review.id %}">Delete Review</a>
+    {% else %}
+
+    {% endif %}
+    <a href="{% url 'drop-reply' review.id %}">Drop Reply</a>
     <a href="{% url 'replies' review.id %}">replies</a> 
 {% endfor %}

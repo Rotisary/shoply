@@ -58,3 +58,6 @@ class Reply(models.Model):
         return f"{self.review.id}'s reply, reply No: {self.id}"
 
     
+
+
+    

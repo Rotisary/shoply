@@ -6,5 +6,9 @@
         <li>{{ product.price }}</li>
         <li>{{ product.stock }}</li>
     </ul>
-    <a href="{% url 'product-update' product.id %}">update</a>
-    <a href="{% url 'product-delete' product.id %}">delete</a>
+    {% if product.seller == user %}
+        <a href="{% url 'product-update' product.id %}">update</a>
+        <a href="{% url 'product-delete' product.id %}">delete</a>
+    {% else %}
+
+    {% endif %}

@@ -1,0 +1,11 @@
+<h4>Buyer: {{ order.owner.username }}</h4>
+<h3>Products</h3>
+{% for item in items %}
+    <ul>
+        <li><h2>{{ item.item.name }}</h3></li>
+        <li><h3>price:{{ item.item.price }}</h2></li>
+        <li><h3>quantity:{{ item.quantity }}</h2></li>
+        <li><h3>cart item price: {{ item.cart_item_price }}</h2></li>
+    </ul>
+{% endfor %}
+<h4>delivery address: {{ order.delivery_address }}</h4>

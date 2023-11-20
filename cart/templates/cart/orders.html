@@ -1,0 +1,7 @@
+{% for order in orders %}
+<ul>
+    <li>  
+        <h4><a href="{% url 'order-detail' order.id %}">{{ order.owner.username }}'s order</a></h4>     
+    </li>
+</ul>
+{% endfor %}

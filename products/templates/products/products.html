@@ -1,4 +1,5 @@
 <h5>{{ user.username }}</h5>
+<h5><a href="{% url 'cart' user.username %}">your cart</a></h5>
 {% for product in products %}
     <ul>
         <li>{{ product.seller }}</li>
@@ -29,4 +30,9 @@
         {% endif %}
     </ul>
     <a href="{% url 'reviews' product.id %}">Product Reviews</a>
+    {% if product in user.profile.cart.items %}
+        <button><a href="{% url 'add-to-cart' product.id %}">Remove from Cart</a></button>
+    {% else %}
+        <button><a href="{% url 'add-to-cart' product.id %}">Add to Cart</a></button>
+    {% endif %}
 {% endfor %}

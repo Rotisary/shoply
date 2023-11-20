@@ -3,4 +3,9 @@
    <ul>
      <li>{{ reply.text }}</li>
    </ul>
+   {% if reply.replier == user %}
+     <a href="{% url 'reply-delete' reply.id %}">Delete Reply</a>
+   {% else %}
+    
+   {% endif %}
 {% endfor %}

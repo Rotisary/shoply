@@ -1,0 +1,14 @@
+{{ cart.no_of_items }}
+{% for item in cart_item %}
+<ul>
+    <li>{{ item.item.name }}</li>
+    <li>{{ item.quantity }}</li>
+    <li>{{ item.cart_item_price }}</li>
+</ul>
+{% endfor %}
+<div>{{ cart.cart_price }}</div>
+<form method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit">place order</button>
+</form>

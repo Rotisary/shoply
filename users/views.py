@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from products.models import Product
 from .forms import UserRegisterForm
-from .models import Profile
+from .models import Profile, Dashboard
 from django.contrib import messages
 
 
@@ -18,6 +18,12 @@ def register(request):
     else:
         form = UserRegisterForm()
     return render(request, 'users/register.html', {'form': form})
+
+
+def dashboard_view(request, username):
+    dashboard = Dashboard.objects.get(dashboard_user__username=username)
+    context = {'dashboard': dashboard}
+    return render (request, 'users/dashboard.html', context)
 
 
 def LoginPage(request):
@@ -53,6 +59,12 @@ def add_to_wishlist(request, pk):
         return redirect('products')
 
 
+def wishlist_view(request, username):
+    wishlist_products = request.user.profile.wishlist.all()
+    context = {'products': wishlist_products}
+    return render (request, 'users/wishlist.html', context)
+
+
 def add_to_favourites(request, username):
     user_to_add = Profile.objects.get(user__username=username)
     current_user_profile = request.user.profile
@@ -62,3 +74,10 @@ def add_to_favourites(request, username):
         current_user_profile.favourite.add(user_to_add)
     
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def favourites_view(request, username):
+    favourite_sellers = request.user.profile.favourite.all()
+    context = {'sellers': favourite_sellers}
+    return render (request, 'users/favourites.html', context)
+

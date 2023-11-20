@@ -1,0 +1,19 @@
+<div class="col-md-8">
+    {% if messages %}
+       {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+          </div>
+       {% endfor %}
+    {% endif %}
+</div>
+{% for product in product %} 
+    <ul>
+        <li><h4>{{ product.item.name }}</h4></li>
+        <li><h4>{{ product.item.price }}</h4></li>
+        <li><h4>{{ product.quantity }}</h4></li> <a href="{% url 'decrease-quantity' product.id %}">decrease quantity</a>  <a href="{% url 'increase-quantity' product.id %}">increase quantity</a>    
+    </ul>
+    <a href="{% url 'add-to-cart' product.id %}">remove from cart</a> 
+{% endfor %}
+
+<a href="{% url 'checkout' cart.id %}">CheckOut</a>

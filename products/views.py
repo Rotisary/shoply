@@ -28,7 +28,9 @@ def listing(request, pk):
 
 def products_list(request):
     products = Product.objects.filter(listed=True)
-    context = {'products': products } 
+    context = {
+        'products': products
+     } 
     return render(request, 'products/products.html', context)
 
 
@@ -94,7 +96,7 @@ class ProductDetailView(DetailView):
     model = Product
     context_object_name = 'product'
 
-
+@method_decorator(allowed_users(allowed_roles=['seller']), name="dispatch")
 class ProductUpdateView(UserPassesTestMixin, UpdateView):
     model = Product
     fields = ['name', 'category', 'price', 'stock', 'image']
@@ -111,7 +113,7 @@ class ProductUpdateView(UserPassesTestMixin, UpdateView):
         else:
             return False
 
-
+@method_decorator(allowed_users(allowed_roles=['seller']), name="dispatch")
 class ProductDeleteView(UserPassesTestMixin, DeleteView):
     model = Product
     success_url = '/'
@@ -134,7 +136,7 @@ def ProductReviewView(request, pk):
             review.product = product
             review.writer = request.user
             review.save()
-            # return reverse ('reviews', {'pk': pk})
+            # return reverse('reviews',  review.product.id)
     else:
         form = ReviewForm()
     
@@ -183,3 +185,37 @@ def ReplyListView(request, pk):
         'review': review
     }
     return render(request, 'products/replies-list.html', context)
+
+
+class ReviewDeleteView(UserPassesTestMixin, DeleteView):
+    model = Review
+    template_name = 'products/review-delete-confirm.html'
+    
+    def get_success_url(self):
+        review = self.get_object()
+        return reverse('reviews', kwargs={'pk': review.product.id})
+
+    def test_func(self):
+        review = self.get_object()
+        if self.request.user == review.writer:
+            return True
+        else:
+            return False
+
+
+class ReplyDeleteView(UserPassesTestMixin, DeleteView):
+    model = Reply
+    template_name = 'products/reply-delete-confirm.html'
+    
+    def get_success_url(self):
+        reply = self.get_object()
+        return reverse('replies', kwargs={'pk': reply.review.id})
+
+    def test_func(self):
+        reply = self.get_object()
+        if self.request.user == reply.replier:
+            return True
+        else:
+            return False
+
+
