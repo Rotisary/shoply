@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'products.apps.ProductsConfig',
     'users.apps.UsersConfig',
     'cart.apps.CartConfig',
+    'notifications',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -120,6 +121,15 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = 'oladotunkolapo@gmail.com'
+EMAIL_HOST_PASSWORD = 'hitvrhdqdtectqsd'
 
 
 # Static files (CSS, JavaScript, Images)

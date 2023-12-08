@@ -5,6 +5,7 @@ from products.models import Product
 from .forms import UserRegisterForm
 from .models import Profile, Dashboard
 from django.contrib import messages
+from .decorators import allowed_users
 
 
 def register(request):
@@ -20,6 +21,7 @@ def register(request):
     return render(request, 'users/register.html', {'form': form})
 
 
+@allowed_users(allowed_roles=['seller'])
 def dashboard_view(request, username):
     dashboard = Dashboard.objects.get(dashboard_user__username=username)
     context = {'dashboard': dashboard}
@@ -81,3 +83,8 @@ def favourites_view(request, username):
     context = {'sellers': favourite_sellers}
     return render (request, 'users/favourites.html', context)
 
+
+
+
+# b = 5*8
+# print(b)

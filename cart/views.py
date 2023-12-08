@@ -1,15 +1,20 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 from products.models import Product
-from users.models import Profile, Dashboard
+from users.models import CustomUser, Profile, Dashboard
 from .models import Cart, Order, CartItems
 from .forms import OrderCreationForm
 from django.contrib import messages
+from django.core.mail import send_mail
+from shoply.settings import EMAIL_HOST_USER
+from django.conf import settings
+
 
 def add_to_cart(request, pk):
     product = get_object_or_404(Product, id=pk)
     current_user = request.user
     cart_item, created = CartItems.objects.get_or_create(user=current_user, 
                                                         cart=current_user.profile.cart,
+                                                        seller=product.seller,
                                                         item=product)
     if current_user.profile.cart.items.filter(id=cart_item.id).first():
         current_user.profile.cart.items.remove(cart_item)
@@ -69,14 +74,21 @@ def order_detail_view(request, pk):
     return render(request, 'cart/order_detail.html', context)
 
 
-def test(request):
-    quantity = request.GET.get('quantity')
-    address = request.GET.get('address')
-    context = {
-        'quantity': quantity,
-        'address': address
-    }
-    return render(request, 'cart/test.html', context)
+def attended_to_view(request, pk):
+    order = Order.objects.filter(id=pk).first()
+    if order.attended_to == False:
+        order.attended_to = True
+        order.save()
+    elif order.attended_to == True:
+        order.attended_to = False  
+        order.save()
+    elif order.attended_to == False:
+        order_cart_items = order.cart.items.all()
+        for cart_item in order_cart_items:
+            order.cart.items.remove(cart_item)
+        order.save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 def checkout_view(request, pk):
@@ -87,12 +99,24 @@ def checkout_view(request, pk):
             order.owner = request.user
             order.cart = request.user.profile.cart
             order.save()
+
+
+            subject = "New Order"
+            message = "Dear" +  "  "  +  order.owner.username + "you have a new order to attend to"
+            cart_item = order.cart.items.all()
+            users = CustomUser.objects.all()
+            for user in users:
+                if user.products.filter(id=cart_item.id):
+                    email = user.email
+                    recipient_list = [email]
+                    send_mail(subject, message, EMAIL_HOST_USER, recipient_list, fail_silently=False)
             return redirect('order-confirmed')
     else:
         form = OrderCreationForm()
-        cart = request.user.profile.cart
-        cart_item = request.user.profile.cart.items.all()
 
+
+    cart = request.user.profile.cart
+    cart_item = request.user.profile.cart.items.all()
     context = {
             'form': form,
             'cart': cart,

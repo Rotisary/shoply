@@ -1,8 +1,11 @@
-<h3>{{ dashboard.dashboard_user.username }}</h3>
-<ul>
-    <li><a href="{% url 'create' %}">add a product</a></li>
-    <li><a href="{% url 'inventory' %}">Inventory</a></li>
-    <li><a href="{% url 'order-list' dashboard.dashboard_user.username %}">Orders</a></li>
-    <li><a href="{% url 'wishlist' dashboard.dashboard_user.username %}">Wishlist</a></li>
-    <li><a href="{% url 'favourites' dashboard.dashboard_user.username %}">Favourites</a></li>
-</ul>
+{% extends 'products/base.html' %}
+{% block content %}
+    <h3>{{ dashboard.dashboard_user.username }}</h3>
+    <ul>
+        <li><a href="{% url 'create' %}">add a product</a></li>
+        <li><a href="{% url 'inventory' %}">Inventory</a></li>
+        <li><a href="{% url 'order-list' dashboard.dashboard_user.username %}">Orders</a></li>
+        <li><a href="{% url 'wishlist' dashboard.dashboard_user.username %}">Wishlist</a></li>
+        <li><a href="{% url 'favourites' dashboard.dashboard_user.username %}">Favourites</a></li>
+    </ul>
+{% endblock %}

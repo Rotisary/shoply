@@ -1,7 +1,10 @@
-{% for order in orders %}
-<ul>
-    <li>  
-        <h4><a href="{% url 'order-detail' order.id %}">{{ order.owner.username }}'s order</a></h4>     
-    </li>
-</ul>
-{% endfor %}
+{% extends 'products/base.html' %}
+{% block content %}
+    {% for order in orders %}
+        <ul>
+            <li>  
+                <h4><a href="{% url 'order-detail' order.id %}">{{ order.owner.username }}'s order</a></h4>     
+            </li>
+        </ul>
+    {% endfor %}
+{% endblock %}

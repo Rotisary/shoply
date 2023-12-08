@@ -22,7 +22,7 @@ class Product(models.Model):
         (SPORTS, 'Sports&Outdoor'),
         (HOME_PRODUCTS, 'Home Products'),
     ]
-    seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    seller = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user_products', on_delete=models.CASCADE)
     category = models.CharField(max_length=25, choices=CATEGORY_CHOICES, default=ELECTRONICS)
     name = models.CharField(max_length=100)
     image = models.ImageField(default='product_default.png', upload_to='product_pics')

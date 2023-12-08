@@ -1,32 +1,35 @@
-<h5>{{ user.username }}</h5>
-{% for product in products %}
-    <ul>
-        <li>{{ product.seller }}</li>
-        <li><a href="{% url 'product-detail' product.id %}">{{ product.name }}</a></li>
-        <img src="{{ product.image.url }}">
-        <li>{{ product.price }}</li>
-        <li>{{ product.stock }}</li>
-        {% if product in user.profile.wishlist.all %}
-            <li>        
-                <form action="{% url 'add-to-wishlist' product.id %}", method="POST">
-                    {% csrf_token %}
-                    <button type="submit">remove from wishlist</button>
-                </form>
-            </li>
-        {% else %}
-            <li>        
-                <form action="{% url 'add-to-wishlist' product.id %}", method="POST">
-                    {% csrf_token %}
-                    <button type="submit">add to wishlist</button>
-                </form>
-            </li>
-        {% endif %}
+{% extends 'products/base.html' %}
+{% block content %}
+    <h5>{{ user.username }}</h5>
+    {% for product in products %}
+        <ul>
+            <li>{{ product.seller }}</li>
+            <li><a href="{% url 'product-detail' product.id %}">{{ product.name }}</a></li>
+            <img src="{{ product.image.url }}">
+            <li>{{ product.price }}</li>
+            <li>{{ product.stock }}</li>
+            {% if product in user.profile.wishlist.all %}
+                <li>        
+                    <form action="{% url 'add-to-wishlist' product.id %}", method="POST">
+                        {% csrf_token %}
+                        <button type="submit">remove from wishlist</button>
+                    </form>
+                </li>
+            {% else %}
+                <li>        
+                    <form action="{% url 'add-to-wishlist' product.id %}", method="POST">
+                        {% csrf_token %}
+                        <button type="submit">add to wishlist</button>
+                    </form>
+                </li>
+            {% endif %}
 
-        {% if product.seller.profile in user.profile.favourite.all %}
-          <li><a href="{% url 'add-to-favourites' product.seller.username %}">remove from favourites</a></li>
-        {% else %}
-          <li><a href="{% url 'add-to-favourites' product.seller.username %}">add to favourites</a></li>
-        {% endif %}
-    </ul>
-    <a href="{% url 'reviews' product.id %}">Product Reviews</a>
-{% endfor %}
+            {% if product.seller.profile in user.profile.favourite.all %}
+            <li><a href="{% url 'add-to-favourites' product.seller.username %}">remove from favourites</a></li>
+            {% else %}
+            <li><a href="{% url 'add-to-favourites' product.seller.username %}">add to favourites</a></li>
+            {% endif %}
+        </ul>
+        <a href="{% url 'reviews' product.id %}">Product Reviews</a>
+    {% endfor %}
+{% endblock %}

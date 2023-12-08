@@ -1,7 +1,10 @@
-{{ quantity }}
-{{  address }}
+{% extends 'products/base.html' %}
+{% block content %}
+  {{ quantity }}
+  {{  address }}
 
-<form action="{% url 'order' %}", method="POST">
-  {% csrf_token %}
-    <button type="submit">Place Order</button>
-</form>
+  <form action="{% url 'order' %}", method="POST">
+    {% csrf_token %}
+      <button type="submit">Place Order</button>
+  </form>
+{% endblock %}

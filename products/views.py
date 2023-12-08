@@ -23,6 +23,9 @@ def listing(request, pk):
     elif product.listed == True:
         product.listed = False
         product.save()
+
+    current_user = request.user
+    current_user.products.add(product)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 

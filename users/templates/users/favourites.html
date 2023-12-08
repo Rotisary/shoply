@@ -1,5 +1,8 @@
-{% for seller in sellers %}
-  <ul>
-    <li>{{ seller.user.username }}</li>
-  </ul>
-{% endfor %}
+{% extends 'products/base.html' %}
+{% block content %}
+  {% for seller in sellers %}
+    <ul>
+      <li>{{ seller.user.username }}</li>
+    </ul>
+  {% endfor %}
+{% endblock %}

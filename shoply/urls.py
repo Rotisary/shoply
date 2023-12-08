@@ -25,7 +25,9 @@ urlpatterns = [
     path('order/<int:pk>/detail/', cart_views.order_detail_view, name='order-detail'),
     path('cart/<int:pk>/checkout/', cart_views.checkout_view, name='checkout'),
     path('order-confirmed/', cart_views.order_confirmation_view, name='order-confirmed'),
-    path('', include('products.urls'))
+    path('order/<int:pk>/attended_to/', cart_views.attended_to_view, name='attended-to'),
+    path('', include('products.urls')),
+    path('inbox/notifications/', include('notifications.urls', namespace='notifications'))
 ]
 
 

@@ -9,6 +9,7 @@ class CartItems(models.Model):
     cart = models.ForeignKey('Cart', related_name='cart', on_delete=models.CASCADE, blank=True)
     item = models.ForeignKey(Product, related_name='item_product', on_delete=models.CASCADE, blank=True, null=True)
     quantity = models.IntegerField(default=1)
+    seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='item_seller', null=True)
 
 
     def cart_item_price(self):
@@ -22,6 +23,7 @@ class CartItems(models.Model):
 class Cart(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
     items = models.ManyToManyField(CartItems, related_name='cart_products', blank=True)
+    ordered = models.BooleanField(default=False)
 
     
     def no_of_items(self):
@@ -59,6 +61,7 @@ class Order(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.DO_NOTHING) 
     delivery_address = models.CharField(blank=True, null=True)
     payment_option = models.CharField(choices=PAYMENT_CHOICES, default=PALMPAY, null=True, blank=True)
+    attended_to = models.BooleanField(default=False)
 
 
     def __str__(self):

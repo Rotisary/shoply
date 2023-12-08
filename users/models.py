@@ -11,6 +11,7 @@ class CustomUser(AbstractUser):
         (SELLER, 'seller'),
     ]
     user_type = models.CharField(choices=USER_CHOICE, default=BUYER)
+    products = models.ManyToManyField(Product, related_name='user_products', blank=True)
 
 
 class Profile(models.Model):

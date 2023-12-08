@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'products/main.css' %}">
+    <script src="https://kit.fontawesome.com/682f18e2b6.js" crossorigin="anonymous"></script>
+    {% if title  %}
+     <title>shoply - {{ title }}</title>
+    {% else %}
+     <title>shoply</title>
+    {% endif %}
+</head>
+
+<body>
+    {{ user.username }}
+    {% if user.is_authenticated %}
+        <h5><a href="{% url 'dashboard' user.username %}">Dashboard</a></h5>
+        <h5><a href="{% url 'cart' user.username %}">your cart</a></h5>
+    {% else %}
+        <h5><a href="{% url 'register' %}">Create Account</a></h5>
+        <h5><a href="{% url 'login' %}">Login</a></h5>
+    {% endif %}
+{% block content %}{% endblock %}
+</body>
