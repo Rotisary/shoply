@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from shoply.settings import EMAIL_HOST_USER
 from django.conf import settings
+from users.decorators import allowed_users
 
 
 def add_to_cart(request, pk):
@@ -58,12 +59,14 @@ def create_order(request):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+@allowed_users(allowed_roles=['seller'])
 def order_list_view(request, username):
     orders = Order.objects.filter(cart__items__item__seller=request.user.id)
     context = {'orders': orders }
     return render(request, 'cart/orders.html', context)
 
 
+@allowed_users(allowed_roles=['seller'])
 def order_detail_view(request, pk):
     order =  Order.objects.get(id=pk)
     items = order.cart.items.filter(item__seller=request.user)
@@ -100,7 +103,7 @@ def checkout_view(request, pk):
             order.cart = request.user.profile.cart
             order.save()
 
-
+            #order notifiication is still a work in progress
             subject = "New Order"
             message = "Dear" +  "  "  +  order.owner.username + "you have a new order to attend to"
             cart_item = order.cart.items.all()
@@ -127,15 +130,3 @@ def checkout_view(request, pk):
 
 def order_confirmation_view(request):
     return render(request, 'cart/order-confirmation.html')
-
-  
-
-# items = CartItems.objects.all()
-# cart = Cart.objects.all()
-# items_list = list(items)
-# total = 0
-# for item in items_list:
-#     price = item.cart_item_price() 
-#     total += price
-
-# print(total)

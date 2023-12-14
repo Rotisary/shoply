@@ -1,3 +1,88 @@
 body {
-    background: grey;
+    background-color: rgb(72, 72, 72);
 }
+
+.site-header {
+    position:  fixed;
+    top: 0;
+    min-width: 100%;
+}
+
+.navbar {
+    color: rgb(85, 85, 85);
+} 
+.nav-item {
+    margin-right: 10px;
+    margin-left: 10px;
+    display: grid;
+    place-content: center;
+    color: #f1f1f2;
+}
+
+.nav-item:hover {
+    color: grey;
+}
+
+
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgb(37, 37, 37);
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 10px;
+  }
+  
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #f1f1f1;
+    display: block;
+    transition: 0.3s;
+  }
+  
+.sidenav a:hover {
+    color: grey;
+  }
+  
+.sidenav .closebtn {
+    position: absolute;
+    top: 2px;
+    right: 5px;
+    font-size: 36px;
+    margin-left: 50px;
+  }
+
+.sidenav-header {
+    color: white;  
+    background-color:#212020;
+}
+
+/* .page-break {
+    background-color: black;
+    border: 50px;
+} */
+
+  
+#main {
+    transition: margin-left .5s;
+    padding: 5px;
+  }
+  
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+  }
+
+main {
+    padding-top: 5rem;
+  }
+
+/* .menu-link {
+    color: white;
+} */

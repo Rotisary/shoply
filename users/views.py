@@ -82,9 +82,3 @@ def favourites_view(request, username):
     favourite_sellers = request.user.profile.favourite.all()
     context = {'sellers': favourite_sellers}
     return render (request, 'users/favourites.html', context)
-
-
-
-
-# b = 5*8
-# print(b)

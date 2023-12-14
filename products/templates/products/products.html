@@ -1,7 +1,6 @@
 {% extends 'products/base.html' %}
 {% block content %}
     {% for product in products %}
-        <div class="container">
             <ul>
                 <li>{{ product.seller }}</li>
                 <li><a href="{% url 'product-detail' product.id %}">{{ product.name }}</a></li>
@@ -36,7 +35,6 @@
             {% else %}
                 <button><a href="{% url 'add-to-cart' product.id %}">Add to Cart</a></button>
             {% endif %}
-        </div>
 
     {% endfor %}
 {% endblock %}
