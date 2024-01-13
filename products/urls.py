@@ -32,4 +32,5 @@ urlpatterns = [
     path('reply/<int:pk>/replies/', views.ReplyListView, name='replies'),
     path('review/<int:pk>/delete/', ReviewDeleteView.as_view(), name='review-delete'),
     path('reply/<int:pk>/delete/', ReplyDeleteView.as_view(), name='reply-delete'),
+    path('search/', views.search_view, name='search'),
 ]

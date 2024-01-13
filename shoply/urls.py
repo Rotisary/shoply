@@ -20,7 +20,6 @@ urlpatterns = [
     path('<str:username>/cart/', cart_views.cart_products_list, name='cart'),
     path('item/<int:pk>/quantity/increase/', cart_views.increase_item_quantity, name='increase-quantity'),
     path('item/<int:pk>/quantity/decrease/', cart_views.decrease_item_quantity, name='decrease-quantity'),
-    path('order/', cart_views.create_order, name='order'),
     path('<str:username>/orders/', cart_views.order_list_view, name='order-list'),
     path('order/<int:pk>/detail/', cart_views.order_detail_view, name='order-detail'),
     path('cart/<int:pk>/checkout/', cart_views.checkout_view, name='checkout'),

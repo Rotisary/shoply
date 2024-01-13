@@ -1,15 +1,18 @@
-<h5>{{ user.username }}</h5>
-{% for product in products %}
-    <ul>
-        <li>{{ product.seller }}</li>
-        <li><a href="{% url 'product-detail' product.id %}">{{ product.name }}</a></li>
-        <img src="{{ product.image.url }}">
-        <li>{{ product.price }}</li>
-        <li>{{ product.stock }}</li>
-    </ul>
-    {% if product.listed == False %}
-       <a href="{% url 'listing' product.id %}">list</a>
-    {% elif product.listed == True %}
-       <a href="{% url 'listing' product.id %}">unlist</a>
-    {% endif %}
-{% endfor %}
+{% extends 'products/base.html' %}
+    {% block content %}
+        <h5>{{ user.username }}</h5>
+        {% for product in products %}
+            <ul>
+                <li>{{ product.seller }}</li>
+                <li><a href="{% url 'product-detail' product.id %}">{{ product.name }}</a></li>
+                <img src="{{ product.image.url }}">
+                <li>{{ product.price }}</li>
+                <li>{{ product.stock }}</li>
+            </ul>
+            {% if product.listed == False %}
+            <a href="{% url 'listing' product.id %}">list</a>
+            {% elif product.listed == True %}
+            <a href="{% url 'listing' product.id %}">unlist</a>
+            {% endif %}
+        {% endfor %}
+    {% endblock %}

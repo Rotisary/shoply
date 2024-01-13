@@ -15,8 +15,8 @@ def add_to_cart(request, pk):
     current_user = request.user
     cart_item, created = CartItems.objects.get_or_create(user=current_user, 
                                                         cart=current_user.profile.cart,
-                                                        seller=product.seller,
-                                                        item=product)
+                                                        item=product,
+                                                        seller=product.seller)
     if current_user.profile.cart.items.filter(id=cart_item.id).first():
         current_user.profile.cart.items.remove(cart_item)
     else:
@@ -51,12 +51,53 @@ def decrease_item_quantity(request, pk):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-def create_order(request):
+def checkout_view(request, pk):
     if request.method == 'POST':
-        order = Order.objects.create(owner=request.user, cart=request.user.profile.cart)
-        order.save()
-        messages.success(request, f"Your order has been placed")
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        form = OrderCreationForm(request.POST)
+        if form.is_valid:
+            order = form.save(commit=False)
+            order.owner = request.user
+            order.cart = request.user.profile.cart
+            order.save()
+
+
+            subject = "New Order"
+            message =  "you have a new order to attend to"
+            cart_item = order.cart.items.all()
+            def sendmail(cart_item):
+                recipients = []
+
+                for item in cart_item:
+                    email = item.seller.email
+                    recipients_email = email
+                    recipients.append(recipients_email)
+
+                return recipients
+            
+            recipient_list = sendmail(cart_item)
+            send_mail(subject, message, EMAIL_HOST_USER, recipient_list, fail_silently=False)
+        return redirect('order-confirmed')
+    else:
+        form = OrderCreationForm()
+
+
+    cart = request.user.profile.cart
+    cart_item = request.user.profile.cart.items.all()
+    context = {
+            'form': form,
+            'cart': cart,
+            'cart_item': cart_item
+        }
+    return render(request, 'cart/checkout.html', context)
+
+
+# def create_order(request):
+#     if request.method == 'POST':
+#         order = Order.objects.create(owner=request.user, cart=request.user.profile.cart)
+#         order.save()
+#         request.user.profile.cart.items.all.delete()
+#         messages.success(request, f"Your order has been placed")
+#         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @allowed_users(allowed_roles=['seller'])
@@ -92,40 +133,6 @@ def attended_to_view(request, pk):
         order.save()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-def checkout_view(request, pk):
-    if request.method == 'POST':
-        form = OrderCreationForm(request.POST)
-        if form.is_valid:
-            order = form.save(commit=False)
-            order.owner = request.user
-            order.cart = request.user.profile.cart
-            order.save()
-
-            #order notifiication is still a work in progress
-            subject = "New Order"
-            message = "Dear" +  "  "  +  order.owner.username + "you have a new order to attend to"
-            cart_item = order.cart.items.all()
-            users = CustomUser.objects.all()
-            for user in users:
-                if user.products.filter(id=cart_item.id):
-                    email = user.email
-                    recipient_list = [email]
-                    send_mail(subject, message, EMAIL_HOST_USER, recipient_list, fail_silently=False)
-            return redirect('order-confirmed')
-    else:
-        form = OrderCreationForm()
-
-
-    cart = request.user.profile.cart
-    cart_item = request.user.profile.cart.items.all()
-    context = {
-            'form': form,
-            'cart': cart,
-            'cart_item': cart_item
-        }
-    return render(request, 'cart/checkout.html', context)
 
 
 def order_confirmation_view(request):

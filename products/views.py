@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.utils.decorators import method_decorator
 from users.decorators import allowed_users
 from django.urls import reverse
+from django.db.models import Q
 
 
 @allowed_users(allowed_roles=['seller'])
@@ -14,7 +15,7 @@ def inventory_list(request):
     context = {'products': products } 
     return render(request, 'products/inventory.html', context)
 
-
+@allowed_users(allowed_roles=['seller'])
 def listing(request, pk):
     product = Product.objects.get(id=pk)
     if product.listed == False:
@@ -220,5 +221,19 @@ class ReplyDeleteView(UserPassesTestMixin, DeleteView):
             return True
         else:
             return False
+
+
+def search_view(request):
+        search = request.GET.get('search')
+        if search == " ":
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            searched = Product.objects.filter( 
+                Q(name__contains=search) | Q(category__contains=search)
+                )
+            
+            context = {'searched': searched}
+            return render(request, 'products/search.html', context)
+
 
 
