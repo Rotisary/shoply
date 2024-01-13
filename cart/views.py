@@ -91,15 +91,6 @@ def checkout_view(request, pk):
     return render(request, 'cart/checkout.html', context)
 
 
-# def create_order(request):
-#     if request.method == 'POST':
-#         order = Order.objects.create(owner=request.user, cart=request.user.profile.cart)
-#         order.save()
-#         request.user.profile.cart.items.all.delete()
-#         messages.success(request, f"Your order has been placed")
-#         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
 @allowed_users(allowed_roles=['seller'])
 def order_list_view(request, username):
     orders = Order.objects.filter(cart__items__item__seller=request.user.id)
