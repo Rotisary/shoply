@@ -6,6 +6,8 @@ from .forms import UserRegisterForm
 from .models import Profile, Dashboard
 from django.contrib import messages
 from .decorators import allowed_users
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponseBadRequest
 
 
 def register(request):
@@ -49,14 +51,17 @@ def LogoutPage(request):
 
 def add_to_wishlist(request, pk):
     if request.method == "POST":
-        product = get_object_or_404(Product, id=pk)
-        app_user = request.user.profile
-        if app_user.wishlist.filter(id=product.id).first():
-            app_user.wishlist.remove(product)
-        else:
-            app_user.wishlist.add(product)
+        try:
+            product = get_object_or_404(Product, id=pk)
+            app_user = request.user.profile
+            if app_user.wishlist.filter(id=product.id).first():
+                app_user.wishlist.remove(product)
+            else:
+                app_user.wishlist.add(product)
 
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        except ObjectDoesNotExist:
+            return HttpResponseBadRequest('failed to add product to wishlist')
     else:
         return redirect('products')
 
@@ -68,14 +73,17 @@ def wishlist_view(request, username):
 
 
 def add_to_favourites(request, username):
-    user_to_add = Profile.objects.get(user__username=username)
-    current_user_profile = request.user.profile
-    if current_user_profile.favourite.filter(user__username=user_to_add.user.username).first():
-        current_user_profile.favourite.remove(user_to_add)
-    else:
-        current_user_profile.favourite.add(user_to_add)
-    
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    try:
+        user_to_add = Profile.objects.get(user__username=username)
+        current_user_profile = request.user.profile
+        if current_user_profile.favourite.filter(user__username=user_to_add.user.username).first():
+            current_user_profile.favourite.remove(user_to_add)
+        else:
+            current_user_profile.favourite.add(user_to_add)
+        
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    except ObjectDoesNotExist:
+        return HttpResponseBadRequest('failed to add seller to favourites')
 
 
 def favourites_view(request, username):
