@@ -2,48 +2,48 @@
 
 {% block content %}
     <div class="flex-container">
-        {% for product in searched %}
+        {% for search in searched %}
             <div>
                 <ul>
-                    <li class="text">{{ product.seller }}</li>
-                    <li class="text"><a class="link-text" href="{% url 'product-detail' product.id %}">{{ product.name }}</a></li>
+                    <li class="text">{{ search.seller }}</li>
+                    <li class="text"><a class="link-text" href="{% url 'product-detail' search.id %}">{{ search.name }}</a></li>
                     <div>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
                             <ul class="dropdown-menu">
-                                {% if product in user.profile.wishlist.all %}
+                                {% if search in user.profile.wishlist.all %}
                                     <li>
-                                        <form action="{% url 'add-to-wishlist' product.id %}", method="POST">
+                                        <form action="{% url 'add-to-wishlist' search.id %}", method="POST">
                                             {% csrf_token %}
                                             <button class="dropdown-item", type="submit">remove from wishlist</button>
                                         </form>
                                     </li>
                                 {% else %}
                                     <li>        
-                                        <form action="{% url 'add-to-wishlist' product.id %}", method="POST", class="dropdown-item">
+                                        <form action="{% url 'add-to-wishlist' search.id %}", method="POST", class="dropdown-item">
                                             {% csrf_token %}
                                             <button class="dropdown-item", type="submit">add to wishlist</button>
                                         </form>
                                     </li>
                                 {% endif %}
-                                {% if product.seller.profile in user.profile.favourite.all %}
-                                    <li><a class="dropdown-item", href="{% url 'add-to-favourites' product.seller.username %}">remove from favourites</a></li>
+                                {% if search.seller.profile in user.profile.favourite.all %}
+                                    <li><a class="dropdown-item", href="{% url 'add-to-favourites' search.seller.username %}">remove from favourites</a></li>
                                 {% else %}
-                                    <li><a class="dropdown-item", href="{% url 'add-to-favourites' product.seller.username %}">add to favourites</a></li>
+                                    <li><a class="dropdown-item", href="{% url 'add-to-favourites' search.seller.username %}">add to favourites</a></li>
                                 {% endif %}
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item", href="{% url 'reviews' product.id %}">Product Reviews</a></li>
+                                <li><a class="dropdown-item", href="{% url 'reviews' search.id %}">Product Reviews</a></li>
                             </ul>
                         </li>
                     </div>
-                    <img class="product-img" src="{{ product.image.url }}">
-                    <li class="text">{{ product.price }}</li>
-                    <li class="text" id="stock">{{ product.stock }}</li>
+                    <img class="product-img" src="{{ search.image.url }}">
+                    <li class="text">{{ search.price }}</li>
+                    <li class="text" id="stock">{{ search.stock }}</li>
                 </ul>
-                {% if product == user.profile.cart.items %}
-                    <div class="add-to-cart"><button><a class="link-text" href="{% url 'add-to-cart' product.id %}">Remove from Cart</a></button></div>
+                {% if search == user.profile.cart.items %}
+                    <div class="add-to-cart"><button><a class="link-text" href="{% url 'add-to-cart' search.id %}">Remove from Cart</a></button></div>
                 {% else %}
-                    <div class="add-to-cart"><button><a class="link-text" href="{% url 'add-to-cart' product.id %}">Add to Cart</a></button></div>
+                    <div class="add-to-cart"><button><a class="link-text" href="{% url 'add-to-cart' search.id %}">Add to Cart</a></button></div>
                 {% endif %}
             </div>
         {% endfor %}

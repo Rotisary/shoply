@@ -52,7 +52,7 @@ def arts_list(request):
 
 def beauty_list(request):
     products = Product.objects.filter(category='BE', listed=True)
-    context = {'products': products } 
+    context = {'products': products} 
     return render(request, 'products/beauty.html', context)
 
 
@@ -140,7 +140,7 @@ def ProductReviewView(request, pk):
             review.product = product
             review.writer = request.user
             review.save()
-            # return reverse('reviews',  review.product.id)
+            return HttpResponseRedirect(reverse('reviews',  kwargs= {'pk': review.product.id}))
     else:
         form = ReviewForm()
     
@@ -170,7 +170,7 @@ def ReviewReplyView(request, pk):
             reply.review = review
             reply.replier = request.user
             reply.save()
-            # return reverse ('reviews', {'pk': pk})
+            return HttpResponseRedirect(reverse ('replies', kwargs= {'pk': reply.review.id}))
     else:
         form = ReplyForm()
     

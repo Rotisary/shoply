@@ -71,7 +71,6 @@ def checkout_view(request, pk):
                     email = item.seller.email
                     recipients_email = email
                     recipients.append(recipients_email)
-
                 return recipients
             
             recipient_list = sendmail(cart_item)
