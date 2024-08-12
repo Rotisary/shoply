@@ -31,13 +31,13 @@ def save_profile(sender,instance, **kwargs):
 
 
 @receiver(post_save, sender=Profile)
-def create_profile(sender, instance, created, **kwargs):
+def create_cart(sender, instance, created, **kwargs):
     if created:
         Cart.objects.create(profile=instance)
 
 
 @receiver(post_save, sender=Profile)
-def save_profile(sender, instance, **kwargs):
+def save_cart(sender, instance, **kwargs):
     instance.cart.save()
 
 

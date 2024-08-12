@@ -1,11 +1,46 @@
 {% extends 'products/base.html' %}
 {% block content %}
-    <h3>{{ dashboard.dashboard_user.username }}</h3>
-    <ul>
-        <li><a href="{% url 'create' %}">add a product</a></li>
-        <li><a href="{% url 'inventory' %}">Inventory</a></li>
-        <li><a href="{% url 'order-list' dashboard.dashboard_user.username %}">Orders</a></li>
-        <li><a href="{% url 'wishlist' dashboard.dashboard_user.username %}">Wishlist</a></li>
-        <li><a href="{% url 'favourites' dashboard.dashboard_user.username %}">Favourites</a></li>
-    </ul>
+    <h3>Welcome To Your Dashboard, {{ dashboard.dashboard_user.username }}</h3>
+    <div class="card-group prod-content-section" id="dashboard-card-group">
+        <div class="col mt-3">
+            <a class="card text-bg-dark" id="img-overlay" href="{% url 'create' %}">
+                <img src="/media/add-product-fill.png" id="dashboard-img">
+                <div class="card-img-overlay overlay-centre">
+                    <h3 class="card-text" style="color: rgb(80, 79, 79);">ADD A PRODUCT</h3>
+                </div>
+            </a>
+        </div>
+        <div class="col mt-3">
+            <a class="card text-bg-dark" id="img-overlay" href="{% url 'inventory' %}">
+                <img src="/media/inventory-fill.png" class="card-img" id="dashboard-img">
+                <div class="card-img-overlay overlay-centre">
+                    <h3 class="card-text" style="color: rgb(80, 79, 79);">INVENTORY</h3>
+                </div>
+            </a>
+        </div>
+        <div class="col mt-3">
+            <a class="card text-bg-dark" id="img-overlay" href="{% url 'order-list' dashboard.dashboard_user.username %}">
+                <img src="/media/order-fill-2.png" class="card-img" id="dashboard-img">
+                <div class="card-img-overlay overlay-centre">
+                    <h3 class="card-text" style="color: rgb(80, 79, 79);">ORDERS</h3>
+                </div>
+            </a>
+        </div>
+        <div class="col mt-3">
+            <a class="card text-bg-dark" id="img-overlay" href="{% url 'wishlist' dashboard.dashboard_user.username %}">
+                <img src="/media/wishlist-fill-2.png" class="card-img" id="dashboard-img">
+                <div class="card-img-overlay overlay-centre">
+                    <h3 class="card-text" style="color: rgb(80, 79, 79);">WISHLIST</h3>
+                </div>
+            </a>
+        </div>
+        <div class="col mt-3">
+            <a class="card text-bg-dark" id="img-overlay" href="{% url 'favourites' dashboard.dashboard_user.username %}">
+                <img src="/media/favourite-fill-2.png" class="card-img" id="dashboard-img">
+                <div class="card-img-overlay overlay-centre">
+                    <h3 class="card-text" style="color: rgb(80, 79, 79);">FAVOURITES</h3>
+                </div>
+            </a>
+        </div>
+    </div> 
 {% endblock %}

@@ -27,8 +27,11 @@ class Product(models.Model):
     name = models.CharField(max_length=100)
     image = models.ImageField(default='product_default.png', upload_to='product_pics')
     price = models.FloatField()
+    description = models.TextField(max_length=300, blank=True)
     stock = models.IntegerField()
+    ordered_count = models.IntegerField(default=0)
     listed = models.BooleanField(default=False)
+    time_added = models.DateTimeField(auto_now_add=True, verbose_name='created_at', blank=True, null=True)
 
     def __str__(self):
         return f"{self.name}"
@@ -42,6 +45,7 @@ class Review(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     body = models.CharField(max_length=100)
+    time_written = models.DateTimeField(auto_now_add=True, verbose_name='created_at', blank=True, null=True)
 
     
     def __str__(self):
@@ -52,6 +56,7 @@ class Reply(models.Model):
     review = models.ForeignKey(Review, on_delete=models.CASCADE)
     replier = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     text = models.CharField(max_length=100)
+    time_written = models.DateTimeField(auto_now_add=True, verbose_name='created_at', blank=True, null=True)
 
 
     def __str__(self):

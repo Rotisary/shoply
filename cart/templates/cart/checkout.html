@@ -1,17 +1,37 @@
 {% extends 'products/base.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
-    {{ cart.no_of_items }}
-    {% for item in cart_item %}
-    <ul>
-        <li>{{ item.item.name }}</li>
-        <li>{{ item.quantity }}</li>
-        <li>{{ item.cart_item_price }}</li>
-    </ul>
-    {% endfor %}
-    <div>{{ cart.cart_price }}</div>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form }}
-        <button type="submit">place order</button>
-    </form>
+    <div class="prod-content-section content-section" style="margin-right: 300px;">
+        <div class="checkout-card-group">
+            {% for item in cart_items %}
+                <div class="card prod-card mb-3" style="width: 18rem;">
+                    <ul class="checkout-prod-list">
+                        <li class="list-group-item" style="border-top: 1px solid #c0bfbf; padding-top: 10px;">{{ item.item.name }}</li>
+                        <li class="list-group-item" style="border-top: 1px solid #c0bfbf; padding-top: 10px;">{{ item.quantity }}</li>
+                        <li class="list-group-item" style="border-top: 1px solid #c0bfbf; padding-top: 10px;">{{ item.cart_item_price }}</li>
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="right-aligned">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-default">Number of items</span>
+                <input class="form-control" type="text" value="{{ cart.no_of_items }}" aria-label="readonly Sizing input example" readonly aria-describedby="inputGroup-sizing-default">     
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-default">Price of items</span>
+                <input class="form-control" type="text" value="{{ cart.cart_price }}" aria-label="readonly Sizing input example" readonly aria-describedby="inputGroup-sizing-default">     
+            </div> 
+        </div>
+        <form method="POST">
+            {% csrf_token %}         
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4" style="text-align: center">Billing Information</legend>
+                {{ form|crispy }}
+            </fieldset>
+            <div class="form-group" style="text-align: center">
+                <button class="btn btn-outline-dark" type="submit">Place Order</button>
+            </div>
+        </form>
+    </div>
 {% endblock %}

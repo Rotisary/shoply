@@ -1,5 +1,13 @@
-<form action="{% url 'drop-reply' review.id %}" method="POST">
-    {% csrf_token %}
-    {{ form }}
-    <button type="submit">drop your reply</button>
-</form>
+{% extends 'products/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="prod-content-section" id="prod-form">
+        <form action="{% url 'drop-reply' review.id %}" method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div style="text-align: center;">
+                <button class="btn btn-outline-dark" type="submit">drop your reply</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

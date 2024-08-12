@@ -1,14 +1,40 @@
-<h5>{{ user.username }}</h5>
-    <ul>
-        <li>{{ product.seller }}</li>
-        <li>{{ product.name }}</li>
-        <img src="{{ product.image.url }}">
-        <li>{{ product.price }}</li>
-        <li>{{ product.stock }}</li>
-    </ul>
-    {% if product.seller == user %}
-        <a href="{% url 'product-update' product.id %}">update</a>
-        <a href="{% url 'product-delete' product.id %}">delete</a>
-    {% else %}
-
-    {% endif %}
+{% extends 'products/base.html' %}
+{% block content %}
+<div class="prod-content-section content-section">
+    <div class="card prod-card mb-3" style="max-width: 1000px;">
+        <div class="row g-0">
+            <div class="col-md-8">
+                <img src="{{ product.image.url }}" class="img-fluid rounded-start" id="product-detail-img" alt="...">
+            </div>
+            <div class="col-md-4">
+                <div class="card-body">
+                    <ul class="prod-list">
+                        <li class="list-group-item" style="border-top: 1px solid #c0bfbf; padding-top: 10px;"><h4>{{ product.seller }}</h4></li>
+                        <li class="list-group-item" style="border-top: 1px solid #c0bfbf; padding-top: 10px;"><h4>{{ product.name }}</h4></li>
+                        <li class="list-group-item" style="border-top: 1px solid #c0bfbf; padding-top: 10px;"><p>{{ product.description }}</p></li>
+                        <div class="prod-list-group" style="margin-top: 5rem;">
+                            <li class="list-group-item" style="padding-left: 10px;">Price: {{ product.price }}</li>
+                            <li class="list-group-item" style="padding-left: 10px;">Stock: {{ product.stock }}</li>
+                        </div>
+                    </ul>
+                    <div class="card-footer">
+                        {% if product.seller == user %}
+                            <a class="card-link" href="{% url 'product-update' product.id %}">update</a>  
+                            <a class="card-link" style="padding-left: 8rem;" href="{% url 'product-delete' product.id %}">delete</a>
+                        {% else %}
+                    
+                        {% endif %}
+                        <div style="padding-left: 4rem;">
+                            {% if product == user.profile.cart.items %}
+                                <div class="btn btn-outline-dark"><a id="prod-footer-link" href="{% url 'add-to-cart' product.id %}">Remove from Cart</a></div>
+                            {% else %}
+                                <div class="btn btn-outline-dark"><a id="prod-footer-link" href="{% url 'add-to-cart' product.id %}">Add to Cart</a></div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,8 +1,16 @@
 {% extends 'products/base.html' %}
-  {% block content %}
+{% load crispy_forms_tags %}
+{% block content %}
+  <div class="prod-content-section" id="prod-form">
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
-      {{ form }}
-      <button type="submit">Add Product</button>
+        <fieldset class="form-group">
+          <legend class="border-bottom mb-4" style="text-align: center;" >Add a New Product!</legend>
+          {{ form|crispy }}
+        </fieldset>
+        <div class="form-group" style="text-align: center;">
+          <button class="btn btn-outline-dark" type="submit">Add Product</button>
+        </div>
     </form>
-  {% endblock %}
+  </div>
+{% endblock %}

@@ -1,6 +1,12 @@
-<form method="POST">
-    {% csrf_token %}
-    <h4>are you sure you want to delete this reply?</h4>
-    <button type="submit">Delete</button>
-    <a href="{% url 'replies' object.review.id %}">cancel</a>
-</form>
+{% extends 'products/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="prod-content-section" id="prod-form">
+      <form method="POST">
+        {% csrf_token %}
+        <h4>are you sure you want to delete this reply?</h4>
+        <button class="btn btn-outline-danger" type="submit">Delete</button>
+        <a href="{% url 'replies' object.review.id %}">Cancel</a>
+      </form>
+    </div>
+{% endblock %}

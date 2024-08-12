@@ -1,0 +1,10 @@
+{% extends 'products/base.html' %}
+{% block content %}
+    {% for recommendation in recommendations %}
+        <ul>
+            <li>{{ recommendation.name }}</li>
+            <li>{{ recommendation.price }}</li>
+            <li>{{ recommendation.stock }}</li>
+        </ul>
+    {% endfor %}
+{% endblock %}

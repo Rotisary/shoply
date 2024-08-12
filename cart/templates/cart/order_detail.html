@@ -1,20 +1,47 @@
 {% extends 'products/base.html' %}
 {% block content %}
-    <h4>Buyer: {{ order.owner.username }}</h4>
-    <h3>Products</h3>
-    {% for item in items %}
-        <ul>
-            <li><h2>{{ item.item.name }}</h3></li>
-            <li><h3>price:{{ item.item.price }}</h2></li>
-            <li><h3>quantity:{{ item.quantity }}</h2></li>
-            <li><h3>cart item price: {{ item.cart_item_price }}</h2></li>
-        </ul>
-    {% endfor %}
-    <h4>delivery address: {{ order.delivery_address }}</h4>
-
-    {% if order.attended_to == False %}
-        <a href="{% url 'attended-to' order.id %}">attended to</a>
-    {% elif order.attended_to == True %}
-        <a href="{% url 'attended-to' order.id %}">unmark as attended to</a>
-    {% endif %}
+    <h4>{{ order.owner.username }} Placed an Order!</h4>
+    <div class="prod-content-section" id="prod-form">
+        <div class="prod-list-group">
+            <h4>Product(s) Ordered: </h4>
+            <p>{{ order.time_of_order|timesince }} ago</p>
+        </div>
+        {% for item in items %}
+            <div class="order-detail-group">
+                
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Product Name</span>
+                    <input class="form-control" type="text" value="{{ item.item.name }}" aria-label="readonly Sizing input example" readonly aria-describedby="inputGroup-sizing-default">     
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Product Price</span>
+                    <input class="form-control" type="text" value="{{ item.item.price }}" aria-label="readonly Sizing input example" readonly aria-describedby="inputGroup-sizing-default">     
+                </div>
+                
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Quantity</span>
+                    <input class="form-control" type="text" value="{{ item.quantity }}" aria-label="readonly Sizing input example" readonly aria-describedby="inputGroup-sizing-default">     
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Total Product Price</span>
+                    <input class="form-control" type="text" value="{{ item.order_item_price }}" aria-label="readonly Sizing input example" readonly aria-describedby="inputGroup-sizing-default">     
+                </div>
+            </div>
+        {% endfor %}
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-default">Total Price</span>
+            <input class="form-control" type="text" value="{{ Total_Price }}" aria-label="readonly Sizing input example" readonly aria-describedby="inputGroup-sizing-default">     
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-default">Delivery Address</span>
+            <input class="form-control" type="text" value="{{ order.delivery_address }}" aria-label="readonly Sizing input example" readonly aria-describedby="inputGroup-sizing-default">     
+        </div>
+        <div style="text-align: center; padding-right: 5rem;">
+            {% if order.attended_to == False %}
+                <a class="btn btn-outline-dark" id="prod-footer-link" href="{% url 'attended-to' order.id %}">attended to</a>
+            {% elif order.attended_to == True %}
+                <a class="btn btn-outline-dark" id="prod-footer-link" href="{% url 'attended-to' order.id %}">unmark as attended to</a>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

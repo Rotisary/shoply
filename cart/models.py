@@ -4,12 +4,14 @@ from users.models import Profile
 from products.models import Product
 
 
-class CartItems(models.Model):
+class CartItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     cart = models.ForeignKey('Cart', related_name='cart', on_delete=models.CASCADE, blank=True)
-    item = models.ForeignKey(Product, related_name='item_product', on_delete=models.CASCADE, blank=True, null=True)
+    item = models.ForeignKey(Product, related_name='cart_items', on_delete=models.DO_NOTHING, blank=True, null=True)
+    category = models.TextField(blank=True)
     quantity = models.IntegerField(default=1)
-    seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='item_seller', null=True)
+    seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='item_seller', null=True)
+    time_created = models.DateTimeField(auto_now_add=True, verbose_name='created_at', blank=True, null=True)
 
 
     def cart_item_price(self):
@@ -22,8 +24,9 @@ class CartItems(models.Model):
 
 class Cart(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
-    items = models.ManyToManyField(CartItems, related_name='cart_products', blank=True)
-    ordered = models.BooleanField(default=False)
+    items = models.ManyToManyField(CartItem, related_name='cart_products', blank=True)
+    time_created = models.DateTimeField(auto_now_add=True, verbose_name='created_at', blank=True, null=True)
+
 
     
     def no_of_items(self):
@@ -42,6 +45,23 @@ class Cart(models.Model):
         return f"{self.profile.user.username}'s Cart"
 
 
+class OrderItem(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    order = models.ForeignKey('Order', related_name='order_items', on_delete=models.CASCADE, blank=True)
+    item = models.ForeignKey(Product, related_name='order_items_in', on_delete=models.DO_NOTHING, blank=True, null=True)
+    quantity = models.IntegerField(default=1)
+    seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='order_items_sold', null=True)
+    time_created = models.DateTimeField(auto_now_add=True, verbose_name='created_at', blank=True, null=True)
+
+
+    def order_item_price(self):
+        return self.quantity * self.item.price
+
+
+    def __str__(self):
+        return f"{self.user.username}'s order item,  order item {self.id}"
+
+
 class Order(models.Model):
     PALMPAY = 'PY'
     OPAY = 'OP'
@@ -58,10 +78,10 @@ class Order(models.Model):
         (GUARANTEE_TRUST_BANK, 'GTB')
     ]
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    cart = models.ForeignKey(Cart, on_delete=models.DO_NOTHING) 
     delivery_address = models.CharField(blank=True, null=True)
     payment_option = models.CharField(choices=PAYMENT_CHOICES, default=PALMPAY, null=True, blank=True)
     attended_to = models.BooleanField(default=False)
+    time_of_order = models.DateTimeField(auto_now_add=True, verbose_name='created_at', blank=True, null=True)
 
 
     def __str__(self):
