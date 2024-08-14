@@ -88,7 +88,7 @@ DATABASES = {
         'NAME': DB_NAME,
         'USER': DB_USER,
         'PASSWORD': DB_PASSWORD,
-        'HOST': 'localhost',
+        'HOST': 'shoply-avpj.onrender.com',
         'PORT': '5432',
     }
 }
