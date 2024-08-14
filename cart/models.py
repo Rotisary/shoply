@@ -1,16 +1,17 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 from users.models import Profile
 from products.models import Product
 
 
 class CartItem(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    cart = models.ForeignKey('Cart', related_name='cart', on_delete=models.CASCADE, blank=True)
-    item = models.ForeignKey(Product, related_name='cart_items', on_delete=models.DO_NOTHING, blank=True, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='cart_items', on_delete=models.CASCADE)
+    cart = models.ForeignKey('Cart', related_name='cart_items', on_delete=models.CASCADE, blank=True)
+    item = models.ForeignKey(Product, related_name='cart_items_in', on_delete=models.DO_NOTHING, blank=True, null=True)
     category = models.TextField(blank=True)
     quantity = models.IntegerField(default=1)
-    seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='item_seller', null=True)
+    seller = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='items_sold',  on_delete=models.DO_NOTHING, null=True)
     time_created = models.DateTimeField(auto_now_add=True, verbose_name='created_at', blank=True, null=True)
 
 
@@ -23,8 +24,8 @@ class CartItem(models.Model):
 
 
 class Cart(models.Model):
-    profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
-    items = models.ManyToManyField(CartItem, related_name='cart_products', blank=True)
+    profile = models.OneToOneField(Profile, related_name='cart', on_delete=models.CASCADE)
+    items = models.ManyToManyField(CartItem, related_name='cart_in', blank=True)
     time_created = models.DateTimeField(auto_now_add=True, verbose_name='created_at', blank=True, null=True)
 
 
@@ -46,13 +47,22 @@ class Cart(models.Model):
 
 
 class OrderItem(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='order_items', on_delete=models.CASCADE)
     order = models.ForeignKey('Order', related_name='order_items', on_delete=models.CASCADE, blank=True)
     item = models.ForeignKey(Product, related_name='order_items_in', on_delete=models.DO_NOTHING, blank=True, null=True)
     quantity = models.IntegerField(default=1)
-    seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='order_items_sold', null=True)
+    seller = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='order_items_sold', on_delete=models.DO_NOTHING, null=True)
     time_created = models.DateTimeField(auto_now_add=True, verbose_name='created_at', blank=True, null=True)
 
+
+    def save(self, *args, **kwargs):
+        if self.item.stock >= self.quantity:
+            self.item.stock -= self.quantity
+            self.item.ordered_count += self.quantity
+            self.item.save()
+            super().save(*args, **kwargs)
+        else:
+            raise ValueError("not enough stock available for this product")
 
     def order_item_price(self):
         return self.quantity * self.item.price
@@ -77,11 +87,11 @@ class Order(models.Model):
         (FIRST_BANK_OF_NIGERIA, 'First Bank'),
         (GUARANTEE_TRUST_BANK, 'GTB')
     ]
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='orders',on_delete=models.CASCADE)
     delivery_address = models.CharField(blank=True, null=True)
     payment_option = models.CharField(choices=PAYMENT_CHOICES, default=PALMPAY, null=True, blank=True)
     attended_to = models.BooleanField(default=False)
-    time_of_order = models.DateTimeField(auto_now_add=True, verbose_name='created_at', blank=True, null=True)
+    time_of_order = models.DateTimeField(default=timezone.now, verbose_name='created_at', blank=True, null=True)
 
 
     def __str__(self):

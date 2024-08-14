@@ -5,20 +5,23 @@
     <a href="{% url 'drop-reply' review.id %}">Drop A Reply</a>
     {% for reply in page_obj %}
       <div class="card mb-3 review-div" style="width: 30rem; line-height: 3rem;"> 
-        <ul class="nav nav-tabs card-header-tabs prod-list-group">   
-          <li class="card-nav-item"><h6>@{{ reply.replier.username }}</h6>--{{ reply.text }}</li>
+        <div class="prod-list-group review-header">
+          <ul class="review-writer">   
+            <li><h6>@{{ reply.replier.username }}</h6></li>
+          </ul>
           {% if reply.replier == user %}
-            <li class="nav-item dropdown card-dropdown">
+            <li class="dropdown card-dropdown review-dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: rgb(55, 53, 53);"></a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{% url 'reply-delete' reply.id %}">Delete Reply</a></li>
+                  <li><a class="dropdown-item" href="{% url 'reply-delete' reply.id %}">Delete Reply</a></li>
               </ul>
             </li>
           {% else %}
 
           {% endif %}
-        </ul>
-      </div>
+        </div>      
+        <p>--{{ reply.text }}</p>  
+      </div>      
     {% endfor %}
 
     <div style="padding-left: 32rem;">

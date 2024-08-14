@@ -1,4 +1,5 @@
 {% extends 'products/base.html' %}
+{% load custom_filters %}
 {% block content %}
     <h3>Orders For You</h3>
     <div class="prod-content-section content-section">
@@ -7,14 +8,15 @@
                 <div class="card mb-3 un-order-div">
                     <div class="nav nav-tabs card-header-tabs prod-list-group">
                         <a class="order-link card-nav-item" href="{% url 'order-detail' order.id %}">order from {{ order.owner.username }}</a>
-                        <p style="padding-right: 1rem;">{{ order.time_of_order|time:"g:i A" }}</p>
+                        <p style="padding-right: 1rem;">{{ order.time_of_order|custom_time_display }}</p>
                     </div>    
                 </div>
             {% else %}
                 <div class="card mb-3  order-div">
                     <div class="nav nav-tabs card-header-tabs prod-list-group">
                         <a class="order-link card-nav-item" href="{% url 'order-detail' order.id %}">order from {{ order.owner.username }}</a>
-                        <p style="padding-right: 1rem;">{{ order.time_of_order|time:"g:i A" }}</p>
+                        
+                        <p style="padding-right: 1rem;">{{ order.time_of_order|custom_time_display }}</p>
                     </div>    
                 </div>
             {% endif %}

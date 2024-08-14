@@ -3,7 +3,7 @@
 {% block content %}
     <div class="card-group prod-content-section">
         {% for product in page_obj %}
-            <div class="col mt-3">
+            <div class="col mt-3" style="padding-bottom: 2rem; padding-top: 1rem;">
                 <div class="card prod-card mb-3 h-100" style="width: 18rem;">
                     <div class="card-header">
                         <ul class="nav nav-tabs card-header-tabs prod-list-group">
@@ -13,28 +13,32 @@
                             <li class="nav-item dropdown card-dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: rgb(55, 53, 53);"></a>
                                 <ul class="dropdown-menu">
-                                    {% if product in user.profile.wishlist.all %}
-                                        <li>
-                                            <form action="{% url 'add-to-wishlist' product.id %}", method="POST">
-                                                {% csrf_token %}
-                                                <button class="dropdown-item", type="submit">remove from wishlist</button>
-                                            </form>
-                                        </li>
+                                    {% if user.profile != product.seller.profile %}
+                                        {% if product in user.profile.wishlist.all %}
+                                            <li>
+                                                <form action="{% url 'add-to-wishlist' product.id %}", method="POST">
+                                                    {% csrf_token %}
+                                                    <button class="dropdown-item", type="submit">remove from wishlist</button>
+                                                </form>
+                                            </li>
+                                        {% else %}
+                                            <li>        
+                                                <form action="{% url 'add-to-wishlist' product.id %}", method="POST">
+                                                    {% csrf_token %}
+                                                    <button class="dropdown-item", type="submit">add to wishlist</button>
+                                                </form>
+                                            </li>
+                                        {% endif %}
+                                        {% if product.seller.profile in user.profile.favourite.all %}
+                                            <li><a class="dropdown-item", href="{% url 'add-to-favourites' product.seller.username %}">remove from favourites</a></li>
+                                        {% else %}
+                                            <li><a class="dropdown-item", href="{% url 'add-to-favourites' product.seller.username %}">add to favourites</a></li>
+                                        {% endif %}
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item", href="{% url 'reviews' product.id %}">Product Reviews</a></li>
                                     {% else %}
-                                        <li>        
-                                            <form action="{% url 'add-to-wishlist' product.id %}", method="POST">
-                                                {% csrf_token %}
-                                                <button class="dropdown-item", type="submit">add to wishlist</button>
-                                            </form>
-                                        </li>
+                                        <li><a class="dropdown-item", href="{% url 'reviews' product.id %}">Product Reviews</a></li>
                                     {% endif %}
-                                    {% if product.seller.profile in user.profile.favourite.all %}
-                                        <li><a class="dropdown-item", href="{% url 'add-to-favourites' product.seller.username %}">remove from favourites</a></li>
-                                    {% else %}
-                                        <li><a class="dropdown-item", href="{% url 'add-to-favourites' product.seller.username %}">add to favourites</a></li>
-                                    {% endif %}
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item", href="{% url 'reviews' product.id %}">Product Reviews</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -42,55 +46,58 @@
                     <img src="{{ product.image.url }}" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title"><a class="link-text" href="{% url 'product-detail' product.id %}">{{ product.name }}</a></h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <p class="card-text">{{ product.description|truncatewords:25 }}</p>
                     </div>
                     <ul class="prod-list">
                         <div class="prod-list-group" >
                             <li class="list-group-item" style="padding-left: 10px;">Price: {{ product.price }}</li>
-                            {% if product.stock == 0 %}
+                            {% if product.stock <= 0 %}
                                 <li class="list-group-item" style="padding-right: 10px; color: red;">Out of stock</li>
                             {% else %}
                                 <li class="list-group-item" style="padding-right: 10px;">Stock: {{ product.stock }}</li>
                             {% endif %}
                         </div>
                     </ul>
-                    <div class="card-footer" style="padding-left: 5rem;">
-                        {% if user == product.seller %}
-                            <p style="padding-left: 1rem">you cannot add your own products to cart</p>
-                        {% else %}
-                            {% if product in  user.profile.cart.items.all %}
+                        
+                    {% if user == product.seller %}
+                        <div class="card-footer" style="padding-left: 3rem;">
+                            <p>you cannot add your own products to cart</p>                                
+                        </div>
+                    {% else %}
+                        <div class="card-footer" style="padding-left: 5rem;">
+                            {% if product.cart_items_in in  user.profile.cart.items.all %}
                                 <div class="btn btn-outline-dark"><a id="prod-footer-link" href="{% url 'add-to-cart' product.id %}">Remove from Cart</a></div>
                             {% else %}
                                 <div class="btn btn-outline-dark"><a id="prod-footer-link" href="{% url 'add-to-cart' product.id %}">Add to Cart</a></div>
                             {% endif %}
-                        {% endif %}
-                    </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}
+    </div>
         
-        <div style="padding-left: 32rem;">
-            {% if page_obj.has_previous %}
-                <a class="btn btn-outline-dark mt-4 mb-3" href="?page=1">First</a>
-                <a class="btn btn-outline-dark mt-4 mb-3" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-            {% endif %}
-                
-            {% if num_of_pages == 1 %}
+    <div style="padding-left: 32rem;">
+        {% if page_obj.has_previous %}
+            <a class="btn btn-outline-dark mt-4 mb-3" href="?page=1">First</a>
+            <a class="btn btn-outline-dark mt-4 mb-3" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+            
+        {% if num_of_pages == 1 %}
 
-            {% else %}
-                {% for num in page_obj.paginator.page_range %}
-                    {% if page_obj.number == num %}
-                        <a class="btn btn-dark mt-4 mb-3" href="?page={{ num }}">{{ num }}</a>
-                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                        <a class="btn btn-outline-dark mt-4 mb-3" href="?page={{ num }}">{{ num }}</a>
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
+        {% else %}
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <a class="btn btn-dark mt-4 mb-3" href="?page={{ num }}">{{ num }}</a>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <a class="btn btn-outline-dark mt-4 mb-3" href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
 
-            {% if page_obj.has_next %}
-                <a class="btn btn-outline-dark mt-4 mb-3" href="?page={{ page_obj.next_page_number }}">Next</a>
-                <a class="btn btn-outline-dark mt-4 mb-3" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-            {% endif %}
-        </div>
+        {% if page_obj.has_next %}
+            <a class="btn btn-outline-dark mt-4 mb-3" href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a class="btn btn-outline-dark mt-4 mb-3" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
     </div>
 {% endblock %}

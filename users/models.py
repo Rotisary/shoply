@@ -14,7 +14,7 @@ class CustomUser(AbstractUser):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='profile',on_delete=models.CASCADE)
     wishlist = models.ManyToManyField(Product, related_name='wishlists_in', blank=True)
     favourite = models.ManyToManyField("self", related_name='favourites_in', symmetrical=False, blank=True)
     time_created = models.DateTimeField(auto_now_add=True, verbose_name='created_at', blank=True, null=True)
@@ -25,7 +25,7 @@ class Profile(models.Model):
 
 
 class Dashboard(models.Model):
-    dashboard_user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    dashboard_user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='dashboard', on_delete=models.CASCADE, null=True)
     time_created = models.DateTimeField(auto_now_add=True, verbose_name='created_at', blank=True, null=True)
 
 

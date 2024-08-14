@@ -1,7 +1,7 @@
 from django.http import HttpResponseForbidden, HttpResponseNotFound
 from django.shortcuts import render, redirect, HttpResponseRedirect, get_object_or_404, get_list_or_404
 from .models import Product, Review, Reply
-from cart.models import CartItem
+from cart.models import CartItem, Cart
 from .forms import ReviewForm, ReplyForm
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 from django.contrib.auth.mixins import UserPassesTestMixin 
@@ -55,8 +55,15 @@ def listing(request, pk):
 
 
 def products_list(request):
-    products = Product.objects.filter(listed=True).order_by('-time_added')
+    products = Product.listed.all().order_by('-time_added')
     if products.exists():
+        cart = Cart.objects.get(profile=request.user.profile)
+        cart_items = CartItem.objects.filter(user=request.user, cart=cart)
+        # cart_items = []
+        # for cart_item in cart_items_qs:
+        #     for product in products:
+        #         if cart_item.item == product:
+        #             cart_items.append(cart_item)
         paginator = Paginator(products, 4)
 
         num_of_pages = paginator.num_pages
@@ -64,7 +71,8 @@ def products_list(request):
         page_obj = paginator.get_page(page_number)
         context = {
             "page_obj": page_obj,
-            "num_of_pages": num_of_pages
+            "num_of_pages": num_of_pages,
+            'cart_items': cart_items
          }       
     else:
         messages.info(request, "There are no listed products yet, please try again later")
@@ -73,7 +81,7 @@ def products_list(request):
 
 
 def electronics_list(request):
-    products = Product.objects.filter(category='EL',listed=True).order_by('-time_added')
+    products = Product.listed.filter(category='EL').order_by('-time_added')
     if products.exists():
         paginator = Paginator(products, 4)
 
@@ -91,7 +99,7 @@ def electronics_list(request):
 
 
 def arts_list(request):
-    products = Product.objects.filter(category='AR', listed=True).order_by('-time_added')
+    products = Product.listed.filter(category='AR').order_by('-time_added')
     if products.exists():
         paginator = Paginator(products, 4)
 
@@ -109,7 +117,7 @@ def arts_list(request):
 
 
 def beauty_list(request):
-    products = Product.objects.filter(category='BE', listed=True).order_by('-time_added')
+    products = Product.listed.filter(category='BE').order_by('-time_added')
     if products.exists():
         paginator = Paginator(products, 4)
 
@@ -127,7 +135,7 @@ def beauty_list(request):
 
 
 def clothings_list(request):
-    products = Product.objects.filter(category='CL', listed=True).order_by('-time_added')
+    products = Product.listed.filter(category='CL').order_by('-time_added')
     if products.exists():
         paginator = Paginator(products, 4)
 
@@ -145,7 +153,7 @@ def clothings_list(request):
 
 
 def accessories_list(request):
-    products = Product.objects.filter(category='AC', listed=True).order_by('-time_added')
+    products = Product.listed.filter(category='AC').order_by('-time_added')
     if products.exists():
         paginator = Paginator(products, 4)
 
@@ -163,7 +171,7 @@ def accessories_list(request):
 
 
 def toys_list(request):
-    products = Product.objects.filter(category='TY', listed=True).order_by('-time_added')
+    products = Product.listed.filter(category='TY').order_by('-time_added')
     if products.exists():
         paginator = Paginator(products, 4)
 
@@ -181,7 +189,7 @@ def toys_list(request):
 
 
 def sports_list(request):
-    products = Product.objects.filter(category='SP', listed=True).order_by('-time_added')
+    products = Product.listed.filter(category='SP').order_by('-time_added')
     if products.exists():
         paginator = Paginator(products, 4)
 
@@ -199,7 +207,7 @@ def sports_list(request):
 
 
 def home_products_list(request):
-    products = Product.objects.filter(category='HP', listed=True).order_by('-time_added')
+    products = Product.listed.filter(category='HP').order_by('-time_added')
     if products.exists():
         paginator = Paginator(products, 4)
 
@@ -269,7 +277,7 @@ class ProductDeleteView(UserPassesTestMixin, DeleteView):
 def ProductReviewView(request, pk):
     current_user = request.user
     try:
-        product = Product.objects.get(id=pk, listed=True)
+        product = Product.listed.select_related('seller').get(id=pk)
         if current_user == product.seller:  
             return HttpResponseForbidden('error 403: you are not allowed to perform this action')
         else:  
@@ -281,7 +289,7 @@ def ProductReviewView(request, pk):
                     review.writer = request.user
                     review.save()
                     messages.success(request, f'your review has been added')
-                    return reverse_lazy('reviews',  kwargs= {'pk': review.product.id})
+                    return HttpResponseRedirect(reverse_lazy('reviews',  kwargs= {'pk': review.product.id}))
             else:
                 form = ReviewForm()
     except Product.DoesNotExist:
@@ -295,8 +303,8 @@ def ProductReviewView(request, pk):
 
 
 def ReviewListView(request, pk):
-    product = Product.objects.filter(id=pk).first()
-    reviews = Review.objects.filter(product=pk).order_by('-time_written')
+    product = Product.listed.prefetch_related('reviews').get(id=pk)
+    reviews = product.reviews.all().order_by('-time_written')
     if reviews.exists():
         paginator = Paginator(reviews, 4)
 
@@ -344,8 +352,8 @@ def ReviewReplyView(request, pk):
 
 
 def ReplyListView(request, pk):
-    review = Review.objects.filter(id=pk).first()
-    replies = Reply.objects.filter(review=pk).order_by('-time_written')
+    review = Review.objects.prefetch_related('replies').get(id=pk)
+    replies = review.replies.all().order_by('-time_written')
     if replies.exists():
         paginator = Paginator(replies, 4)
 
@@ -409,7 +417,7 @@ def search_view(request):
         if search == " ":
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
-            searched = Product.objects.filter( 
+            searched = Product.listed.filter( 
                 Q(name__icontains=search) | Q(category__icontains=search) | Q(description__icontains=search)
                 ).order_by('-ordered_count')
             if searched.exists():
@@ -424,7 +432,8 @@ def search_view(request):
                     "num_of_pages": num_of_pages
                 } 
             else:
-                context = {"message": "sorry, no product matches your search term"}
+                messages.info(request, "sorry, no product matches your search term")
+                context = {}
         return render(request, 'products/search.html', context)
 
 
@@ -452,7 +461,8 @@ def search_view(request):
 
 #     recommendations = recommendations_list_func(products)
 #     context = {'recommendations': recommendations}
-#     return render(request, 'products/recommendations.html', context)
+#     return render(request, 'products/recommendations.html', context)     
 
-            
-
+# product = Product.objects.prefetch_related('reviews').get(id=4)
+# reviews = product.review_set
+# print(reviews)

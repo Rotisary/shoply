@@ -1,7 +1,7 @@
 {% extends 'products/base.html' %}
 {% block content %}
     <h3>Welcome To Your Cart</h3>
-    <div class="prod-content-section cart-content-section">
+    <div class="prod-content-section content-section">
         {% for product in page_obj %}
             <div class="card prod-card mb-3" style="max-width: 540px;">
                 <div class="row g-0">
@@ -51,6 +51,10 @@
                 <a class="btn btn-outline-dark mt-4 mb-3" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
             {% endif %}
         </div>
-        <a class="btn btn-outline-dark" href="{% url 'checkout' cart.profile.user.username %}">CheckOut</a>
+        {% if cart.no_of_items >= 1 %}
+            <a class="btn btn-outline-dark" href="{% url 'checkout' cart.profile.user.username %}">CheckOut</a>
+        {% else %}
+
+        {% endif %}
     </div>
 {% endblock %}

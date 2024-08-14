@@ -60,9 +60,9 @@ def LogoutPage(request):
 def add_to_wishlist(request, pk):
     if request.method == "POST":
         try:
-            product = Product.objects.get(id=pk, listed=True)
+            product = Product.listed.get(id=pk)
             user = request.user.profile
-            if user == product.seller:
+            if user == product.seller.profile:
                 messages.info(request, 'you cannot your own products to wishlist')
             elif user.wishlist.filter(id=product.id).first():
                 user.wishlist.remove(product)

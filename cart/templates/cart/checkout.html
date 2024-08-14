@@ -13,16 +13,20 @@
                 </div>
             {% endfor %}
         </div>
-        <div class="right-aligned">
-            <div class="input-group mb-3">
-                <span class="input-group-text" id="inputGroup-sizing-default">Number of items</span>
-                <input class="form-control" type="text" value="{{ cart.no_of_items }}" aria-label="readonly Sizing input example" readonly aria-describedby="inputGroup-sizing-default">     
+        {%  if cart.no_of_items == 0 %}
+
+        {% else %}
+            <div class="right-aligned">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Number of items</span>
+                    <input class="form-control" type="text" value="{{ cart.no_of_items }}" aria-label="readonly Sizing input example" readonly aria-describedby="inputGroup-sizing-default">     
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Price of items</span>
+                    <input class="form-control" type="text" value="{{ cart.cart_price }}" aria-label="readonly Sizing input example" readonly aria-describedby="inputGroup-sizing-default">     
+                </div> 
             </div>
-            <div class="input-group mb-3">
-                <span class="input-group-text" id="inputGroup-sizing-default">Price of items</span>
-                <input class="form-control" type="text" value="{{ cart.cart_price }}" aria-label="readonly Sizing input example" readonly aria-describedby="inputGroup-sizing-default">     
-            </div> 
-        </div>
+        {% endif %}
         <form method="POST">
             {% csrf_token %}         
             <fieldset class="form-group">

@@ -3,6 +3,11 @@ from django.conf import settings
 from django.urls import reverse
 
 
+class ProductManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_listed=True)
+
+
 class Product(models.Model):
     ELECTRONICS = "EL"
     ARTS = "AR"
@@ -22,7 +27,7 @@ class Product(models.Model):
         (SPORTS, 'Sports&Outdoor'),
         (HOME_PRODUCTS, 'Home Products'),
     ]
-    seller = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user_products', on_delete=models.CASCADE)
+    seller = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='products', on_delete=models.CASCADE)
     category = models.CharField(max_length=25, choices=CATEGORY_CHOICES, default=ELECTRONICS)
     name = models.CharField(max_length=100)
     image = models.ImageField(default='product_default.png', upload_to='product_pics')
@@ -30,8 +35,11 @@ class Product(models.Model):
     description = models.TextField(max_length=300, blank=True)
     stock = models.IntegerField()
     ordered_count = models.IntegerField(default=0)
-    listed = models.BooleanField(default=False)
+    is_listed = models.BooleanField(default=False)
     time_added = models.DateTimeField(auto_now_add=True, verbose_name='created_at', blank=True, null=True)
+
+    objects = models.Manager()
+    listed = ProductManager()
 
     def __str__(self):
         return f"{self.name}"
@@ -42,7 +50,7 @@ class Product(models.Model):
 
 
 class Review(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, related_name='reviews', on_delete=models.CASCADE)
     writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     body = models.CharField(max_length=100)
     time_written = models.DateTimeField(auto_now_add=True, verbose_name='created_at', blank=True, null=True)
@@ -53,8 +61,8 @@ class Review(models.Model):
 
 
 class Reply(models.Model):
-    review = models.ForeignKey(Review, on_delete=models.CASCADE)
-    replier = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    review = models.ForeignKey(Review, related_name='replies', on_delete=models.CASCADE)
+    replier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='replies', on_delete=models.CASCADE)
     text = models.CharField(max_length=100)
     time_written = models.DateTimeField(auto_now_add=True, verbose_name='created_at', blank=True, null=True)
 

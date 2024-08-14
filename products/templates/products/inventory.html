@@ -1,35 +1,39 @@
 {% extends 'products/base.html' %}
 
 {% block content %}
-<div class="card-group prod-content-section">
-    {{ message }}
-    {% for product in page_obj %}
-        <div class="col mt-3">
-            <div class="card prod-card mb-3 h-100" style="width: 18rem;">
-                <div class="card-header">
-                    <ul class="nav nav-tabs card-header-tabs prod-list-group"></ul>
-                </div>
-                <img src="{{ product.image.url }}" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title"><a class="link-text" href="{% url 'product-detail' product.id %}">{{ product.name }}</a></h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </div>
-                <ul class="prod-list">
-                    <div class="prod-list-group">
-                        <li class="list-group-item" style="padding-left: 10px;">Price: {{ product.price }}</li>
-                        <li class="list-group-item" style="padding-right: 10px;">Stock: {{ product.stock }}</li>
+    <div class="card-group prod-content-section">
+        {% for product in page_obj %}
+            <div class="col mt-3" style="padding-bottom: 2rem; padding-top: 1rem;">
+                <div class="card prod-card mb-3 h-100" style="width: 18rem;">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs prod-list-group"></ul>
                     </div>
-                </ul>
-                <div class="card-footer" style="padding-left: 7rem;">
-                    {% if product.listed == True %}
-                        <a class="btn btn-outline-dark" id="prod-footer-link" href="{% url 'listing' product.id %}">listed</a>
-                    {% else %}
-                        <a class="btn btn-outline-dark" id="prod-footer-link" href="{% url 'listing' product.id %}">list</a>
-                    {% endif %}
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title"><a class="link-text" href="{% url 'product-detail' product.id %}">{{ product.name }}</a></h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </div>
+                    <ul class="prod-list">
+                        <div class="prod-list-group" >
+                            <li class="list-group-item" style="padding-left: 10px;">Price: {{ product.price }}</li>
+                            {% if product.stock <= 0 %}
+                                <li class="list-group-item" style="padding-right: 10px; color: red;">Out of stock</li>
+                            {% else %}
+                                <li class="list-group-item" style="padding-right: 10px;">Stock: {{ product.stock }}</li>
+                            {% endif %}
+                        </div>
+                    </ul>
+                    <div class="card-footer" style="padding-left: 7rem;">
+                        {% if product.listed == True %}
+                            <a class="btn btn-outline-dark" id="prod-footer-link" href="{% url 'listing' product.id %}">listed</a>
+                        {% else %}
+                            <a class="btn btn-outline-dark" id="prod-footer-link" href="{% url 'listing' product.id %}">list</a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 
     <div style="padding-left: 32rem;">
         {% if page_obj.has_previous %}
@@ -53,6 +57,5 @@
             <a class="btn btn-outline-dark mt-4 mb-3" href="?page={{ page_obj.next_page_number }}">Next</a>
             <a class="btn btn-outline-dark mt-4 mb-3" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
         {% endif %}
-    </div>
-</div>   
+    </div>   
 {% endblock %}

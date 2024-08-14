@@ -1,8 +1,7 @@
 from django.http import HttpResponseForbidden, HttpResponseBadRequest, HttpResponseNotFound
-from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
+from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse_lazy
 from products.models import Product
-from users.models import CustomUser, Profile, Dashboard
 from .models import Cart, Order, CartItem, OrderItem
 from .forms import OrderCreationForm
 from django.contrib import messages
@@ -17,7 +16,7 @@ from users.decorators import allowed_users, login_required
 def add_to_cart(request, pk):
     current_user = request.user
     try:
-        product = Product.objects.get(id=pk, listed=True)
+        product = Product.listed.select_related('seller').get(id=pk)
         if current_user == product.seller:  
             return  HttpResponseForbidden('error 403: you are not allowed to perform this action')
         else: 
@@ -55,7 +54,7 @@ def remove_from_cart(request, pk):
 def cart_products_list(request, username):
     try:
         cart = request.user.profile.cart
-        products = request.user.profile.cart.items.all()
+        products = cart.items.all().order_by('-time_created')
         if products.exists():
             paginator = Paginator(products, 4)
 
@@ -81,7 +80,7 @@ def cart_products_list(request, username):
 @login_required()
 def increase_item_quantity(request, pk):
     try:
-        cart_item = CartItem.objects.get(id=pk, item__listed=True)
+        cart_item = CartItem.objects.get(id=pk, item__is_listed=True)
         if cart_item.quantity >= 1:
             cart_item.quantity += 1
             cart_item.save()
@@ -93,7 +92,7 @@ def increase_item_quantity(request, pk):
 @login_required()
 def decrease_item_quantity(request, pk):
     try:
-        cart_item = CartItem.objects.get(id=pk, item__listed=True)
+        cart_item = CartItem.objects.get(id=pk, item__is_listed=True)
         if cart_item.quantity > 1:
             cart_item.quantity -= 1
             cart_item.save()
@@ -106,65 +105,51 @@ def decrease_item_quantity(request, pk):
 def checkout_view(request, username):
     if request.method == 'POST':
         cart_items = request.user.profile.cart.items.all()
+        if cart_items.exists():
+            form = OrderCreationForm(request.POST)
+            if form.is_valid:
+                order = form.save(commit=False)
+                order.owner = request.user
+                order.save()
 
 
-        def create_order_items(product_list):
-            for cart_item in product_list:
-                if cart_item.item.stock <= 0:
-                    messages.error(f"could not order product: {cart_item.item.name}, it out of stock") 
-                else:
-                     order_item = OrderItem.objects.create(user=cart_item.user, 
-                                                        order=order,
-                                                        item=cart_item.item,
-                                                        quantity=cart_item.quantity,
-                                                        seller=cart_item.seller)
+                def create_order_items(product_list):
+                    for cart_item in product_list:
+                        if cart_item.item.stock < cart_item.quantity:
+                            messages.error(request, f"could not order product: {cart_item.item.name}, not enough stock available")
+                            return HttpResponseRedirect(request.META.get('HTTP_REFERER')) 
+                        else:
+                            order_item = OrderItem.objects.create(user=cart_item.user, 
+                                                                order=order,
+                                                                item=cart_item.item,
+                                                                quantity=cart_item.quantity,
+                                                                seller=cart_item.seller)
+                    messages.success(request, f'your order has been placed')
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))                            
+
+
+                create_order_items(cart_items)
+                request.user.profile.cart.items.clear()
+                CartItem.objects.filter(user=request.user, cart=request.user.profile.cart).delete()
                      
-            
-        create_order_items(cart_items)
-        form = OrderCreationForm(request.POST)
-        if form.is_valid:
-            order = form.save(commit=False)
-            order.owner = request.user
-            order.save()
-            request.user.profile.cart.items.clear()
-
-            products = Product.objects.filter(listed=True)
-            if products.exists():
-                for product in products:
-                    if product.stock > 0:
-                        order_items = product.order_items_in.all()
-
-
-                        def no_of_products_ordered_func(items):
-                            no_of_products_ordered = 0
-                            for order_item in items:
-                                if order_item in order.order_items.all():
-                                    no_of_products_ordered += order_item.quantity
-                            return no_of_products_ordered
                         
-
-                        no_of_products_ordered = no_of_products_ordered_func(order_items) 
-                        product.ordered_count = no_of_products_ordered
-                        product.stock = product.stock - no_of_products_ordered
-                        product.save()   
-                    
-
-            def sendmail(items):
-                recipients = []
-                for item in items:
-                    email = item.seller.email
-                    recipients_email = email
-                    recipients.append(recipients_email)
-                return recipients
+                def send_mail_func(items):
+                    recipients = []
+                    for item in items:
+                        email = item.seller.email
+                        recipients_email = email
+                        recipients.append(recipients_email)
+                    return recipients
 
 
-            subject = "New Order"
-            message =  "you have a new order to attend to"
-            order_items = order.order_items.all()
-            recipient_list = sendmail(order_items)
-            send_mail(subject, message, EMAIL_HOST_USER, recipient_list, fail_silently=False)
-            messages.success(request, f'your order has been placed')
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                subject = "New Order"
+                message =  "you have a new order to attend to"
+                order_items = order.order_items.all()
+                recipient_list = send_mail_func(order_items)
+                send_mail(subject, message, EMAIL_HOST_USER, recipient_list, fail_silently=False)
+        else:
+            messages.error(request, "bad request")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         if request.user.profile.cart.items.all().exists():
             form = OrderCreationForm()
@@ -210,7 +195,7 @@ def order_list_view(request, username):
 @allowed_users(allowed_roles=['seller'])
 def order_detail_view(request, pk):
     try:
-        order =  Order.objects.get(id=pk)
+        order =  Order.objects.prefetch_related('order_items').get(id=pk)
         items = order.order_items.filter(seller=request.user)
         if items.exists():
             def total_order_price(order_items):
