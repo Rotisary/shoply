@@ -4,6 +4,7 @@ contourpy==1.2.1
 crispy==0.7.4
 crispy-bootstrap5==2024.2
 cycler==0.12.1
+dj-database-url==2.2.0
 Django==4.2.4
 django-crispy-forms==2.1
 django-model-utils==4.3.1
@@ -21,6 +22,7 @@ numpy==1.26.4
 packaging==24.0
 Pillow==10.0.1
 psycopg2==2.9.9
+psycopg2-binary==2.9.9
 pyparsing==3.1.2
 PyQt5==5.15.10
 PyQt5-Qt5==5.15.2

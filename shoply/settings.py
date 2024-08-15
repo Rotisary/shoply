@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -79,18 +80,26 @@ AUTH_USER_MODEL = "users.CustomUser"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-DB_NAME = "shoply_db"
-DB_USER = "django"
-DB_PASSWORD = "password"
+# DB_NAME = "shoply_db"
+# DB_USER = "django"
+# DB_PASSWORD = "password"
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': DB_NAME,
+#         'USER': DB_USER,
+#         'PASSWORD': DB_PASSWORD,
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': DB_NAME,
-        'USER': DB_USER,
-        'PASSWORD': DB_PASSWORD,
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(
+        # Replace this value with your local database's connection string.
+        default='postgresql://django:password@localhost:5432/shoply_db',
+        conn_max_age=600
+    )
 }
 
 
