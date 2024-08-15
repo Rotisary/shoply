@@ -97,7 +97,7 @@ AUTH_USER_MODEL = "users.CustomUser"
 DATABASES = {
     'default': dj_database_url.config(
         # Replace this value with your local database's connection string.
-        default='postgresql://django:password@localhost:5432/shoply_db',
+        default='postgresql://django:password@https://shoply-avpj.onrender.com/:5432/shoply_db',
         conn_max_age=600
     )
 }
