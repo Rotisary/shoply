@@ -11,6 +11,7 @@ from django.contrib import messages
 from users.decorators import allowed_users, login_required
 from django.urls import reverse, reverse_lazy
 from django.db.models import Q
+from .custom_functions import get_cart_products
 
 
 @login_required()
@@ -18,6 +19,8 @@ from django.db.models import Q
 def inventory_list(request):
     products = Product.objects.filter(seller=request.user)
     if products.exists():
+
+        # paginate the queryset
         paginator = Paginator(products, 4)
 
         num_of_pages = paginator.num_pages
@@ -57,13 +60,15 @@ def listing(request, pk):
 def products_list(request):
     products = Product.listed.all().order_by('-time_added')
     if products.exists():
-        cart = Cart.objects.get(profile=request.user.profile)
-        cart_items = CartItem.objects.filter(user=request.user, cart=cart)
-        # cart_items = []
-        # for cart_item in cart_items_qs:
-        #     for product in products:
-        #         if cart_item.item == product:
-        #             cart_items.append(cart_item)
+
+        # call get_cart_products function
+        cart_items = CartItem.objects.select_related('item').filter(user=request.user, cart=request.user.profile.cart)
+        if cart_items.exists():
+            list = get_cart_products(cart_items)
+        else:
+            list = []
+
+        # paginate the queryset
         paginator = Paginator(products, 4)
 
         num_of_pages = paginator.num_pages
@@ -72,7 +77,7 @@ def products_list(request):
         context = {
             "page_obj": page_obj,
             "num_of_pages": num_of_pages,
-            'cart_items': cart_items
+            'products_list': list
          }       
     else:
         messages.info(request, "There are no listed products yet, please try again later")
@@ -83,6 +88,15 @@ def products_list(request):
 def electronics_list(request):
     products = Product.listed.filter(category='EL').order_by('-time_added')
     if products.exists():
+
+        # call get_cart_products function
+        cart_items = CartItem.objects.select_related('item').filter(user=request.user, cart=request.user.profile.cart)
+        if cart_items.exists():
+            list = get_cart_products(cart_items)
+        else:
+            list = []
+
+        # paginate the queryset
         paginator = Paginator(products, 4)
 
         num_of_pages = paginator.num_pages
@@ -90,7 +104,8 @@ def electronics_list(request):
         page_obj = paginator.get_page(page_number)
         context = {
             "page_obj": page_obj,
-            "num_of_pages": num_of_pages
+            "num_of_pages": num_of_pages,
+            "products_list": list
          }       
     else:
         messages.info(request, 'there are no listed products in this category, please try again later')
@@ -101,6 +116,15 @@ def electronics_list(request):
 def arts_list(request):
     products = Product.listed.filter(category='AR').order_by('-time_added')
     if products.exists():
+
+        # call get_cart_products function
+        cart_items = CartItem.objects.select_related('item').filter(user=request.user, cart=request.user.profile.cart)
+        if cart_items.exists():
+            list = get_cart_products(cart_items)
+        else:
+            list = []
+
+        # paginate the queryset
         paginator = Paginator(products, 4)
 
         num_of_pages = paginator.num_pages
@@ -108,7 +132,8 @@ def arts_list(request):
         page_obj = paginator.get_page(page_number)
         context = {
             "page_obj": page_obj,
-            "num_of_pages": num_of_pages
+            "num_of_pages": num_of_pages,
+            "products_list": list
          }       
     else:
         messages.info(request, 'there are no listed products in this category, please try again later')
@@ -119,6 +144,15 @@ def arts_list(request):
 def beauty_list(request):
     products = Product.listed.filter(category='BE').order_by('-time_added')
     if products.exists():
+
+        # call get_cart_products function
+        cart_items = CartItem.objects.select_related('item').filter(user=request.user, cart=request.user.profile.cart)
+        if cart_items.exists():
+            list = get_cart_products(cart_items)
+        else:
+            list = []
+
+        # paginate the queryset
         paginator = Paginator(products, 4)
 
         num_of_pages = paginator.num_pages
@@ -126,7 +160,8 @@ def beauty_list(request):
         page_obj = paginator.get_page(page_number)
         context = {
             "page_obj": page_obj,
-            "num_of_pages": num_of_pages
+            "num_of_pages": num_of_pages,
+            "products_list": list
          }       
     else:
         messages.info(request, 'there are no listed products in this category, please try again later')
@@ -137,6 +172,15 @@ def beauty_list(request):
 def clothings_list(request):
     products = Product.listed.filter(category='CL').order_by('-time_added')
     if products.exists():
+
+        # call get_cart_products function
+        cart_items = CartItem.objects.select_related('item').filter(user=request.user, cart=request.user.profile.cart)
+        if cart_items.exists():
+            list = get_cart_products(cart_items)
+        else:
+            list = []
+
+        # paginate the queryset
         paginator = Paginator(products, 4)
 
         num_of_pages = paginator.num_pages
@@ -144,7 +188,8 @@ def clothings_list(request):
         page_obj = paginator.get_page(page_number)
         context = {
             "page_obj": page_obj,
-            "num_of_pages": num_of_pages
+            "num_of_pages": num_of_pages,
+            "products_list": list
          }       
     else:
         messages.info(request, 'there are no listed products in this category, please try again later')
@@ -155,6 +200,15 @@ def clothings_list(request):
 def accessories_list(request):
     products = Product.listed.filter(category='AC').order_by('-time_added')
     if products.exists():
+
+        # call get_cart_products function
+        cart_items = CartItem.objects.select_related('item').filter(user=request.user, cart=request.user.profile.cart)
+        if cart_items.exists():
+            list = get_cart_products(cart_items)
+        else:
+            list = []
+
+        # paginate the queryset
         paginator = Paginator(products, 4)
 
         num_of_pages = paginator.num_pages
@@ -162,7 +216,8 @@ def accessories_list(request):
         page_obj = paginator.get_page(page_number)
         context = {
             "page_obj": page_obj,
-            "num_of_pages": num_of_pages
+            "num_of_pages": num_of_pages,
+            "products_list": list
          }       
     else:
         messages.info(request, 'there are no listed products in this category, please try again later')
@@ -173,6 +228,15 @@ def accessories_list(request):
 def toys_list(request):
     products = Product.listed.filter(category='TY').order_by('-time_added')
     if products.exists():
+
+        # call get_cart_products function
+        cart_items = CartItem.objects.select_related('item').filter(user=request.user, cart=request.user.profile.cart)
+        if cart_items.exists():
+            list = get_cart_products(cart_items)
+        else:
+            list = []
+
+        # paginate the queryset
         paginator = Paginator(products, 4)
 
         num_of_pages = paginator.num_pages
@@ -180,7 +244,8 @@ def toys_list(request):
         page_obj = paginator.get_page(page_number)
         context = {
             "page_obj": page_obj,
-            "num_of_pages": num_of_pages
+            "num_of_pages": num_of_pages,
+            "producs_list": list
          }       
     else:
         messages.info(request, 'there are no listed products in this category, please try again later')
@@ -191,6 +256,15 @@ def toys_list(request):
 def sports_list(request):
     products = Product.listed.filter(category='SP').order_by('-time_added')
     if products.exists():
+
+        # call get_cart_products function
+        cart_items = CartItem.objects.select_related('item').filter(user=request.user, cart=request.user.profile.cart)
+        if cart_items.exists():
+            list = get_cart_products(cart_items)
+        else:
+            list = []
+
+        # paginate the queryset
         paginator = Paginator(products, 4)
 
         num_of_pages = paginator.num_pages
@@ -198,7 +272,8 @@ def sports_list(request):
         page_obj = paginator.get_page(page_number)
         context = {
             "page_obj": page_obj,
-            "num_of_pages": num_of_pages
+            "num_of_pages": num_of_pages,
+            "products_list": list
          }       
     else:
         messages.info(request, 'there are no listed products in this category, please try again later')
@@ -209,6 +284,15 @@ def sports_list(request):
 def home_products_list(request):
     products = Product.listed.filter(category='HP').order_by('-time_added')
     if products.exists():
+
+        # call get_cart_products function
+        cart_items = CartItem.objects.select_related('item').filter(user=request.user, cart=request.user.profile.cart)
+        if cart_items.exists():
+            list = get_cart_products(cart_items)
+        else:
+            list = []
+
+        # paginate the queryset
         paginator = Paginator(products, 4)
 
         num_of_pages = paginator.num_pages
@@ -216,7 +300,8 @@ def home_products_list(request):
         page_obj = paginator.get_page(page_number)
         context = {
             "page_obj": page_obj,
-            "num_of_pages": num_of_pages
+            "num_of_pages": num_of_pages,
+            "products_list": list
          }       
     else:
         messages.info(request, 'there are no listed products in this category, please try again later')
@@ -274,8 +359,10 @@ class ProductDeleteView(UserPassesTestMixin, DeleteView):
 
 
 @login_required()
-def ProductReviewView(request, pk):
+def product_review(request, pk):
+    # get current user
     current_user = request.user
+
     try:
         product = Product.listed.select_related('seller').get(id=pk)
         if current_user == product.seller:  
@@ -302,10 +389,12 @@ def ProductReviewView(request, pk):
     return render (request, 'products/create-reviews.html', context)
 
 
-def ReviewListView(request, pk):
+def review_list(request, pk):
     product = Product.listed.prefetch_related('reviews').get(id=pk)
     reviews = product.reviews.all().order_by('-time_written')
     if reviews.exists():
+
+        # paginate the queryset
         paginator = Paginator(reviews, 4)
 
         num_of_pages = paginator.num_pages
@@ -326,7 +415,7 @@ def ReviewListView(request, pk):
         
 
 @login_required()
-def ReviewReplyView(request, pk):
+def reply(request, pk):
     try:
         review = Review.objects.get(id=pk)
         if request.method == "POST":
@@ -351,10 +440,12 @@ def ReviewReplyView(request, pk):
     return render (request, 'products/create-replies.html', context)
 
 
-def ReplyListView(request, pk):
+def reply_list(request, pk):
     review = Review.objects.prefetch_related('replies').get(id=pk)
     replies = review.replies.all().order_by('-time_written')
     if replies.exists():
+
+        # paginate the queryset
         paginator = Paginator(replies, 4)
 
         num_of_pages = paginator.num_pages
@@ -413,7 +504,9 @@ class ReplyDeleteView(UserPassesTestMixin, DeleteView):
 
 
 def search_view(request):
+        # get searched term
         search = request.GET.get('search')
+
         if search == " ":
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
@@ -421,6 +514,15 @@ def search_view(request):
                 Q(name__icontains=search) | Q(category__icontains=search) | Q(description__icontains=search)
                 ).order_by('-ordered_count')
             if searched.exists():
+
+                # call get_cart_products function
+                cart_items = CartItem.objects.select_related('item').filter(user=request.user, cart=request.user.profile.cart)
+                if cart_items.exists():
+                    list = get_cart_products(cart_items)
+                else:
+                    list = []
+
+                # paginate the queryset
                 paginator = Paginator(searched, 4)
 
                 num_of_pages = paginator.num_pages
@@ -429,7 +531,8 @@ def search_view(request):
 
                 context = {
                     "page_obj": page_obj,
-                    "num_of_pages": num_of_pages
+                    "num_of_pages": num_of_pages,
+                    "products_list": list
                 } 
             else:
                 messages.info(request, "sorry, no product matches your search term")
@@ -437,32 +540,9 @@ def search_view(request):
         return render(request, 'products/search.html', context)
 
 
-# def recommendations_view(request):
-#     products = Product.objects.filter(listed=True)
-
-
-#     def recommendations_list_func(products_list):
-#         recommendations_list = []
-#         cart_products = CartItem.objects.filter(user=request.user)
-
-
-#         def cart_product_category_func(cart_product_list):
-#             cart_product_category = []
-#             for cart_product in cart_product_list:
-#                 cart_product_category.append(cart_product.category)
-#             return cart_product_category
-        
-#         cart_product_categories = cart_product_category_func(cart_products)
-#         for product in products_list:
-#             if product.category in cart_product_categories:
-#                 recommendations_list.append(product)
-#         return recommendations_list
-    
-
-#     recommendations = recommendations_list_func(products)
-#     context = {'recommendations': recommendations}
-#     return render(request, 'products/recommendations.html', context)     
-
-# product = Product.objects.prefetch_related('reviews').get(id=4)
-# reviews = product.review_set
-# print(reviews)
+# cart_items = CartItem.objects.filter(user__username='becca')
+# if cart_items.exists():
+#     products = []
+#     for cart_item in cart_items:
+#         product = cart_item.item
+#         products.append(product)

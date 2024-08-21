@@ -20,7 +20,7 @@
                                 <a class="card-link" href="{% url 'increase-quantity' product.id %}"><div class="plus card-footer"></div></a>
                             </div>
                             <div class="card-footer" id="cart-card-footer">
-                                <a  class="btn btn-outline-dark" href="{% url 'remove-from-cart' product.id %}">remove from cart</a>
+                                <a  class="btn btn-outline-dark" href="{% url 'add-to-cart' product.item.id %}">remove from cart</a>
                             </div>
                         </div>
                     </div>

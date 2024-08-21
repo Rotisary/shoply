@@ -1,15 +1,17 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
-from products.models import Product
-from .forms import UserRegisterForm
-from .models import Profile, Dashboard
 from django.contrib import messages
 from django.core.paginator import Paginator
 from .decorators import allowed_users, login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseBadRequest, HttpResponseNotFound
 from django.urls import reverse
+from products.models import Product
+from .forms import UserRegisterForm
+from .models import Profile, Dashboard
+from cart.models import CartItem
+from products.custom_functions import get_cart_products
 
 
 def register(request):
@@ -43,6 +45,7 @@ def LoginPage(request):
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
 
+        # check if user exists
         if user is not None:
             login(request, user)
             return redirect('products')
@@ -82,6 +85,15 @@ def add_to_wishlist(request, pk):
 def wishlist_view(request, username):
     wishlist_products = request.user.profile.wishlist.all()
     if wishlist_products.exists():
+
+        # call get_cart_products function
+        cart_items = CartItem.objects.select_related('item').filter(user=request.user, cart=request.user.profile.cart)
+        if cart_items.exists():
+            list = get_cart_products(cart_items)
+        else:
+            list = []
+
+        # paginate queryset
         paginator = Paginator(wishlist_products, 4)
 
         num_of_pages = paginator.num_pages
@@ -90,7 +102,8 @@ def wishlist_view(request, username):
 
         context = {
             "page_obj": page_obj,
-            "num_of_pages": num_of_pages
+            "num_of_pages": num_of_pages,
+            "products_list": list
         } 
     else:
         messages.info(request, 'your wishlist is empty. Add products to your wishlist so that you can easily find them later')

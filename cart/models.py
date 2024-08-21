@@ -54,10 +54,14 @@ class OrderItem(models.Model):
     seller = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='order_items_sold', on_delete=models.DO_NOTHING, null=True)
     time_created = models.DateTimeField(auto_now_add=True, verbose_name='created_at', blank=True, null=True)
 
-
+    
     def save(self, *args, **kwargs):
         if self.item.stock >= self.quantity:
+
+            # deduct order item quantity from product stock
             self.item.stock -= self.quantity
+
+            # add order item quantity tp product ordered count
             self.item.ordered_count += self.quantity
             self.item.save()
             super().save(*args, **kwargs)

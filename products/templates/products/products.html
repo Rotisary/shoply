@@ -63,13 +63,15 @@
                             <p>you cannot add your own products to cart</p>                                
                         </div>
                     {% else %}
-                        <div class="card-footer" style="padding-left: 5rem;">
-                            {% if data.cart_items_list %}
-                                <div class="btn btn-outline-dark"><a id="prod-footer-link" href="{% url 'remove-from-cart' product.id %}">Remove from Cart</a></div>
-                            {% else %}
-                                <div class="btn btn-outline-dark"><a id="prod-footer-link" href="{% url 'add-to-cart' product.id %}">Add to Cart</a></div>
-                            {% endif %}
-                        </div>
+                        {% if product in products_list %}
+                            <div class="card-footer" style="padding-left: 4rem;">
+                                <div class="btn btn-outline-dark cart-toggle"><a id="prod-footer-link" href="{% url 'add-to-cart' product.id %}">Remove from Cart</a></div>
+                            </div>
+                        {% else %}
+                            <div class="card-footer" style="padding-left: 5rem;">
+                                <div class="btn btn-outline-dark cart-toggle"><a id="prod-footer-link" href="{% url 'add-to-cart' product.id %}">Add to Cart</a></div>
+                            </div>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>

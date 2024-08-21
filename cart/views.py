@@ -1,15 +1,16 @@
-from django.http import HttpResponseForbidden, HttpResponseBadRequest, HttpResponseNotFound
+from django.http import HttpResponseForbidden, HttpResponseBadRequest, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse_lazy
-from products.models import Product
-from .models import Cart, Order, CartItem, OrderItem
-from .forms import OrderCreationForm
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.core.paginator import Paginator
 from shoply.settings import EMAIL_HOST_USER
 from django.conf import settings
 from users.decorators import allowed_users, login_required
+from products.models import Product
+from .models import Cart, Order, CartItem, OrderItem
+from .forms import OrderCreationForm
+from products.custom_functions import create_order_items, send_mail_func, total_order_price
 
 
 @login_required()
@@ -23,31 +24,23 @@ def add_to_cart(request, pk):
             if product.stock <= 0: 
                 return HttpResponseBadRequest('error 400: you cannot add this product to cart, it is out of stock') 
             else:  
-                cart_item = CartItem.objects.create(user=current_user, 
+                cart_item, created = CartItem.objects.get_or_create(user=current_user, 
                                                     cart=current_user.profile.cart,
                                                     item=product,
                                                     category=product.category,
-                                                    seller=product.seller) 
-                
-                cart_item.save()
-                current_user.profile.cart.items.add(cart_item) 
-                messages.success(request, 'product has been successfully added to cart')
+                                                    seller=product.seller)                
+
+                # add the just created cart item to current user's cart or remove if it already exists
+                if not created:
+                    current_user.profile.cart.items.remove(cart_item)
+                    cart_item.delete()
+                    messages.success(request, 'product has been removed from cart')
+                else:
+                    current_user.profile.cart.items.add(cart_item) 
+                    messages.success(request, 'product has been successfully added to cart')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     except Product.DoesNotExist:
         return HttpResponseNotFound('ERROR 404: could not add product to cart, it has been unlisted')
-
-
-def remove_from_cart(request, pk):
-    current_user = request.user
-    try:
-        cart_item = CartItem.objects.get(id=pk)
-        if current_user.profile.cart.items.filter(id=cart_item.id):
-            current_user.profile.cart.items.remove(cart_item) 
-            messages.success(request, 'product has been removed from cart')
-        
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    except CartItem.DoesNotExist:
-        return HttpResponseNotFound('ERROR 404: this product has been unlisted')
 
 
 @login_required()
@@ -56,6 +49,8 @@ def cart_products_list(request, username):
         cart = request.user.profile.cart
         products = cart.items.all().order_by('-time_created')
         if products.exists():
+
+            # paginate the queryset
             paginator = Paginator(products, 4)
 
             num_of_pages = paginator.num_pages
@@ -105,43 +100,23 @@ def decrease_item_quantity(request, pk):
 def checkout_view(request, username):
     if request.method == 'POST':
         cart_items = request.user.profile.cart.items.all()
+
+        # create an order if there are cart items in user's cart
         if cart_items.exists():
             form = OrderCreationForm(request.POST)
             if form.is_valid:
                 order = form.save(commit=False)
                 order.owner = request.user
-                order.save()
+                order.save()                            
 
+                # call the function to create order items for the just created order
+                create_order_items(cart_items, order, request)
 
-                def create_order_items(product_list):
-                    for cart_item in product_list:
-                        if cart_item.item.stock < cart_item.quantity:
-                            messages.error(request, f"could not order product: {cart_item.item.name}, not enough stock available")
-                            return HttpResponseRedirect(request.META.get('HTTP_REFERER')) 
-                        else:
-                            order_item = OrderItem.objects.create(user=cart_item.user, 
-                                                                order=order,
-                                                                item=cart_item.item,
-                                                                quantity=cart_item.quantity,
-                                                                seller=cart_item.seller)
-                    messages.success(request, f'your order has been placed')
-                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))                            
-
-
-                create_order_items(cart_items)
+                # remove all cart items from the user's cart and delete all cart items associated with the user
                 request.user.profile.cart.items.clear()
                 CartItem.objects.filter(user=request.user, cart=request.user.profile.cart).delete()
-                     
-                        
-                def send_mail_func(items):
-                    recipients = []
-                    for item in items:
-                        email = item.seller.email
-                        recipients_email = email
-                        recipients.append(recipients_email)
-                    return recipients
 
-
+                # send mail to all the sellers of products in the order
                 subject = "New Order"
                 message =  "you have a new order to attend to"
                 order_items = order.order_items.all()
@@ -157,7 +132,7 @@ def checkout_view(request, username):
             messages.info(request, 'please add products to your cart')
             return HttpResponseRedirect(reverse_lazy('cart', kwargs={'username': request.user.username}))
 
-
+    # get context data
     cart = request.user.profile.cart
     cart_items = request.user.profile.cart.items.all()
     context = {
@@ -172,8 +147,12 @@ def checkout_view(request, username):
 @login_required()
 @allowed_users(allowed_roles=['seller'])
 def order_list_view(request, username):
+
+    # get the list of orders that has the current user as one of the sellers of the order items it contains
     orders = Order.objects.filter(order_items__seller=request.user).order_by('-time_of_order').distinct()
     if orders.exists():
+
+        # paginate the queryset
         paginator = Paginator(orders, 10)
 
         num_of_pages = paginator.num_pages
@@ -198,22 +177,17 @@ def order_detail_view(request, pk):
         order =  Order.objects.prefetch_related('order_items').get(id=pk)
         items = order.order_items.filter(seller=request.user)
         if items.exists():
-            def total_order_price(order_items):
-                Total_Price = 0.00
-                for item in order_items:
-                    Total_Price += item.order_item_price()
-                return Total_Price
+            context = {
+                'order': order,
+                'items': items,
+                'Total_Price': total_order_price(items),
+            } 
         else:
-            HttpResponseBadRequest('ERROR 400: this order is empty')
-        
+            context = {}
+            HttpResponseBadRequest('ERROR 400: this order is empty')    
     except Order.DoesNotExist:
         return HttpResponseNotFound('ERROR 404: this order has been deleted')
-    
-    context = {
-        'order': order,
-        'items': items,
-        'Total_Price': total_order_price(items),
-     }   
+  
     return render(request, 'cart/order_detail.html', context)
 
 

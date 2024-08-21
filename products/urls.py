@@ -11,6 +11,7 @@ from products.views import (
 
 
 urlpatterns = [
+    # product category list urlpatterns
     path('', views.products_list, name='products'),
     path('inventory/', views.inventory_list, name='inventory'),
     path('list/<int:pk>/', views.listing, name='listing'),
@@ -22,16 +23,20 @@ urlpatterns = [
     path('toys/', views.toys_list, name='toys'),
     path('sports/', views.sports_list, name='sports'),
     path('home-products/', views.home_products_list, name='home-products'),
+
+    # product crud operation urlpatterns
     path('create-product/', ProductCreateView.as_view(), name='create'),
     path('product/<int:pk>/detail/', ProductDetailView.as_view(), name='product-detail'),
     path('product/<int:pk>/update/', ProductUpdateView.as_view(), name='product-update'),
     path('product/<int:pk>/delete/', ProductDeleteView.as_view(), name='product-delete'),
-    path('product/<int:pk>/drop-review/', views.ProductReviewView, name='drop-review'),
-    path('product/<int:pk>/reviews/', views.ReviewListView, name='reviews'),
-    path('review/<int:pk>/reply/', views.ReviewReplyView, name='drop-reply'),
-    path('reply/<int:pk>/replies/', views.ReplyListView, name='replies'),
+
+    # product review, reply urlpatterns
+    path('product/<int:pk>/drop-review/', views.product_review, name='drop-review'),
+    path('product/<int:pk>/reviews/', views.review_list, name='reviews'),
+    path('review/<int:pk>/reply/', views.reply, name='drop-reply'),
+    path('reply/<int:pk>/replies/', views.reply_list, name='replies'),
     path('review/<int:pk>/delete/', ReviewDeleteView.as_view(), name='review-delete'),
     path('reply/<int:pk>/delete/', ReplyDeleteView.as_view(), name='reply-delete'),
+    
     path('search/', views.search_view, name='search'),
-    # path('recommendations/', views.recommendations_view, name='recommendations')
 ]
