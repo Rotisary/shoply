@@ -97,7 +97,7 @@ AUTH_USER_MODEL = "users.CustomUser"
 DATABASES = {
     'default': dj_database_url.config(
         # Replace this value with your local database's connection string.
-        default='postgresql://django:password@5.tcp.eu.ngrok.io/shoply_db',
+        default='postgresql://shoply_prod_db_user:IXXxSYPIL3SwrOJAvJ1YDacob9R9WTP8@dpg-cqun2lij1k6c73di84kg-a/shoply_prod_db',
         conn_max_age=600
     )
 }
