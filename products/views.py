@@ -62,9 +62,12 @@ def products_list(request):
     if products.exists():
 
         # call get_cart_products function
-        cart_items = CartItem.objects.select_related('item').filter(user=request.user, cart=request.user.profile.cart)
-        if cart_items.exists():
-            list = get_cart_products(cart_items)
+        if request.user.is_authenticated:
+            cart_items = CartItem.objects.select_related('item').filter(user=request.user)
+            if cart_items.exists():
+                list = get_cart_products(cart_items)
+            else:
+                list = []
         else:
             list = []
 
@@ -78,7 +81,7 @@ def products_list(request):
             "page_obj": page_obj,
             "num_of_pages": num_of_pages,
             'products_list': list
-         }       
+        }       
     else:
         messages.info(request, "There are no listed products yet, please try again later")
         context = {}
@@ -90,9 +93,12 @@ def electronics_list(request):
     if products.exists():
 
         # call get_cart_products function
-        cart_items = CartItem.objects.select_related('item').filter(user=request.user, cart=request.user.profile.cart)
-        if cart_items.exists():
-            list = get_cart_products(cart_items)
+        if request.user.is_authenticated:
+            cart_items = CartItem.objects.select_related('item').filter(user=request.user)
+            if cart_items.exists():
+                list = get_cart_products(cart_items)
+            else:
+                list = []
         else:
             list = []
 
@@ -118,9 +124,12 @@ def arts_list(request):
     if products.exists():
 
         # call get_cart_products function
-        cart_items = CartItem.objects.select_related('item').filter(user=request.user, cart=request.user.profile.cart)
-        if cart_items.exists():
-            list = get_cart_products(cart_items)
+        if request.user.is_authenticated:
+            cart_items = CartItem.objects.select_related('item').filter(user=request.user)
+            if cart_items.exists():
+                list = get_cart_products(cart_items)
+            else:
+                list = []
         else:
             list = []
 
@@ -146,9 +155,12 @@ def beauty_list(request):
     if products.exists():
 
         # call get_cart_products function
-        cart_items = CartItem.objects.select_related('item').filter(user=request.user, cart=request.user.profile.cart)
-        if cart_items.exists():
-            list = get_cart_products(cart_items)
+        if request.user.is_authenticated:
+            cart_items = CartItem.objects.select_related('item').filter(user=request.user)
+            if cart_items.exists():
+                list = get_cart_products(cart_items)
+            else:
+                list = []
         else:
             list = []
 
@@ -174,9 +186,12 @@ def clothings_list(request):
     if products.exists():
 
         # call get_cart_products function
-        cart_items = CartItem.objects.select_related('item').filter(user=request.user, cart=request.user.profile.cart)
-        if cart_items.exists():
-            list = get_cart_products(cart_items)
+        if request.user.is_authenticated:
+            cart_items = CartItem.objects.select_related('item').filter(user=request.user)
+            if cart_items.exists():
+                list = get_cart_products(cart_items)
+            else:
+                list = []
         else:
             list = []
 
@@ -202,9 +217,12 @@ def accessories_list(request):
     if products.exists():
 
         # call get_cart_products function
-        cart_items = CartItem.objects.select_related('item').filter(user=request.user, cart=request.user.profile.cart)
-        if cart_items.exists():
-            list = get_cart_products(cart_items)
+        if request.user.is_authenticated:
+            cart_items = CartItem.objects.select_related('item').filter(user=request.user)
+            if cart_items.exists():
+                list = get_cart_products(cart_items)
+            else:
+                list = []
         else:
             list = []
 
@@ -230,9 +248,12 @@ def toys_list(request):
     if products.exists():
 
         # call get_cart_products function
-        cart_items = CartItem.objects.select_related('item').filter(user=request.user, cart=request.user.profile.cart)
-        if cart_items.exists():
-            list = get_cart_products(cart_items)
+        if request.user.is_authenticated:
+            cart_items = CartItem.objects.select_related('item').filter(user=request.user)
+            if cart_items.exists():
+                list = get_cart_products(cart_items)
+            else:
+                list = []
         else:
             list = []
 
@@ -258,9 +279,12 @@ def sports_list(request):
     if products.exists():
 
         # call get_cart_products function
-        cart_items = CartItem.objects.select_related('item').filter(user=request.user, cart=request.user.profile.cart)
-        if cart_items.exists():
-            list = get_cart_products(cart_items)
+        if request.user.is_authenticated:
+            cart_items = CartItem.objects.select_related('item').filter(user=request.user)
+            if cart_items.exists():
+                list = get_cart_products(cart_items)
+            else:
+                list = []
         else:
             list = []
 
@@ -286,9 +310,12 @@ def home_products_list(request):
     if products.exists():
 
         # call get_cart_products function
-        cart_items = CartItem.objects.select_related('item').filter(user=request.user, cart=request.user.profile.cart)
-        if cart_items.exists():
-            list = get_cart_products(cart_items)
+        if request.user.is_authenticated:
+            cart_items = CartItem.objects.select_related('item').filter(user=request.user)
+            if cart_items.exists():
+                list = get_cart_products(cart_items)
+            else:
+                list = []
         else:
             list = []
 

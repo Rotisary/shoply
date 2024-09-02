@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure--j&odmhj3saxw01_x7_!$kfq1!9317vecf#)ti9tk7pk#wf@uw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['shoply-avpj.onrender.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -80,10 +80,23 @@ AUTH_USER_MODEL = "users.CustomUser"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+# DB_NAME = "shoply_db"
+# DB_USER = "django"
+# DB_PASSWORD = "password"
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': DB_NAME,
+#         'USER': DB_USER,
+#         'PASSWORD': DB_PASSWORD,
+#         'HOST': 'localhost',
+#         'PORT': '5432'
+#     }
+#}
 DATABASES = {
     'default': dj_database_url.config(
         # Replace this value with your local database's connection string.
-        default='postgresql://django:password@5.tcp.eu.ngrok.io/shoply_db',
+        default='postgresql://shoply_prod_db_user:IXXxSYPIL3SwrOJAvJ1YDacob9R9WTP8@dpg-cqun2lij1k6c73di84kg-a.oregon-postgres.render.com/shoply_prod_db',
         conn_max_age=600
     )
 }
