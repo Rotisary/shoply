@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure--j&odmhj3saxw01_x7_!$kfq1!9317vecf#)ti9tk7pk#wf@uw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'shoply-avpj.onrender.com']
 
 
 # Application definition

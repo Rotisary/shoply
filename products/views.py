@@ -42,12 +42,12 @@ def inventory_list(request):
 def listing(request, pk):
     try:
         product = Product.objects.get(id=pk)
-        if product.listed == False:
-            product.listed = True
+        if product.is_listed == False:
+            product.is_listed = True
             product.save()
             messages.success(request, f'your product has been listed')
-        elif product.listed == True:
-            product.listed = False
+        elif product.is_listed == True:
+            product.is_listed = False
             product.save()
             messages.success(request, f'your product has been unlisted')
     except Product.DoesNotExist:
