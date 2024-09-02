@@ -11,7 +11,7 @@ def custom_time_display(value):
     diff = timezone.make_aware(now) - value
 
     if diff < timedelta(hours=1):
-        return value.stfrtime("%H:%M")  
+        return value.strftime("%H:%M")  
     elif diff < timedelta(days=1):
         return f"{timesince(value).split(',')[0]} ago"
     else:
