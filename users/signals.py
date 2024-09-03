@@ -47,7 +47,7 @@ def create_dashboard(sender, instance, created, **kwargs):
         if instance.user_type == 'SL':   
             Dashboard.objects.create(dashboard_user=instance)
 
-
+ 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def save_dashboard(sender, instance, **kwargs):
     if instance.user_type == 'SL':
