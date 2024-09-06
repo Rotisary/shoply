@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
+import debug_toolbar
 from django.contrib.auth import views as auth_views
 from users import views as  user_views
 from cart import views as cart_views
@@ -44,11 +45,13 @@ urlpatterns = [
      path('cart/<str:username>/checkout/', cart_views.checkout_view, name='checkout'),
      # path('order-confirmed/', cart_views.order_confirmation_view, name='order-confirmed'),
      path('order/<int:pk>/attended_to/', cart_views.attended_to_view, name='attended-to'),
-     path('', include('products.urls')),
-     path('inbox/notifications/', include('notifications.urls', namespace='notifications'))
+     path('', include('products.urls'))
 ]
 
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ]

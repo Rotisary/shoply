@@ -38,16 +38,24 @@ INSTALLED_APPS = [
     'cart.apps.CartConfig',
     'crispy_forms',
     "crispy_bootstrap5",
-    'notifications',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar'
 ]
 
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+#         "LOCATION": "default_cache_table",
+#     }
+# }
+
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -58,6 +66,12 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'shoply.urls'
+
+# CACHE_MIDDLEWARE_ALIAS = 'my-cache'
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
 
 TEMPLATES = [
     {
@@ -80,26 +94,26 @@ AUTH_USER_MODEL = "users.CustomUser"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-DB_NAME = "shoplydb"
-DB_USER = "postgres"
-DB_PASSWORD = "xiVGJewiGqRjoa7YRiIw"
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': DB_NAME,
-        'USER': DB_USER,
-        'PASSWORD': DB_PASSWORD,
-        'HOST': 'database-1.cf6qcyowyliq.eu-north-1.rds.amazonaws.com',
-        'PORT': '5432'
-    }
-}
+# DB_NAME = "shoplydb"
+# DB_USER = "postgres"
+# DB_PASSWORD = "xiVGJewiGqRjoa7YRiIw"
 # DATABASES = {
-#     'default': dj_database_url.config(
-#         # Replace this value with your local database's connection string.
-#         default='postgresql://shoply_prod_db_user:IXXxSYPIL3SwrOJAvJ1YDacob9R9WTP8@dpg-cqun2lij1k6c73di84kg-a.oregon-postgres.render.com/shoply_prod_db',
-#         conn_max_age=600
-#     )
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': DB_NAME,
+#         'USER': DB_USER,
+#         'PASSWORD': DB_PASSWORD,
+#         'HOST': 'database-1.cf6qcyowyliq.eu-north-1.rds.amazonaws.com',
+#         'PORT': '5432'
+#     }
 # }
+DATABASES = {
+    'default': dj_database_url.config(
+        # Replace this value with your local database's connection string.
+        default='postgresql://shoply_prod_db_user:IXXxSYPIL3SwrOJAvJ1YDacob9R9WTP8@dpg-cqun2lij1k6c73di84kg-a.oregon-postgres.render.com/shoply_prod_db',
+        conn_max_age=600
+    )
+}
 
 
 # Password validation
