@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure--j&odmhj3saxw01_x7_!$kfq1!9317vecf#)ti9tk7pk#wf@uw'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -110,7 +110,7 @@ AUTH_USER_MODEL = "users.CustomUser"
 DATABASES = {
     'default': dj_database_url.config(
         # Replace this value with your local database's connection string.
-        default='postgresql://shoply_prod_db_user:IXXxSYPIL3SwrOJAvJ1YDacob9R9WTP8@dpg-cqun2lij1k6c73di84kg-a.oregon-postgres.render.com/shoply_prod_db',
+        default=os.getenv('DATABASE_URL'),
         conn_max_age=600
     )
 }
