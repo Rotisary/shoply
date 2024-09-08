@@ -188,9 +188,6 @@ EMAIL_HOST_PASSWORD = 'hitvrhdqdtectqsd'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATIC_URL = 'static/'
-
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # MEDIA_URL = '/media/'
 
@@ -216,5 +213,11 @@ STORAGES = {
     "default": {
         "BACKEND": "storages.backends.s3.S3Storage",
     },
+    "staticfiles": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",  # Static files locally
+    },
 }
 MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/'
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_URL = 'static/'
