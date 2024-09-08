@@ -30,7 +30,7 @@ class Product(models.Model):
     seller = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='products', on_delete=models.CASCADE)
     category = models.CharField(max_length=25, choices=CATEGORY_CHOICES, default=ELECTRONICS)
     name = models.CharField(max_length=100)
-    image = models.ImageField(default='product_default.png', upload_to='product_pics')
+    image = models.ImageField(default='product_default.png')
     price = models.FloatField()
     description = models.TextField(max_length=300, blank=True)
     stock = models.IntegerField()

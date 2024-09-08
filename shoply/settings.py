@@ -76,9 +76,9 @@ ROOT_URLCONF = 'shoply.urls'
 # ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:8000/",
+    "http://127.0.0.1:8000",
     "http://localhost:8000",  
-    "https://shoply-avpj.onrender.com/",  
+    "https://shoply-avpj.onrender.com",  
 ]
 
 
@@ -213,4 +213,4 @@ AWS_DEFAULT_ACL = None
 
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/'
+MEDIA_URL = 'https://shoply-files.s3.amazonaws.com/'
