@@ -140,7 +140,7 @@ AUTH_USER_MODEL = "users.CustomUser"
 DATABASES = {
     'default': dj_database_url.config(
         # Replace this value with your local database's connection string.
-        default= os.getenv('DATABSE_URL'),
+        default= os.getenv('DATABASE_URL'),
         conn_max_age=600
     )
 }
