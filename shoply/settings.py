@@ -22,10 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY') 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'shoply-avpj.onrender.com']
 
@@ -140,7 +140,7 @@ AUTH_USER_MODEL = "users.CustomUser"
 DATABASES = {
     'default': dj_database_url.config(
         # Replace this value with your local database's connection string.
-        default=os.getenv('DATABASE_URL'),
+        default= os.getenv('DATABSE_URL'),
         conn_max_age=600
     )
 }
@@ -185,6 +185,24 @@ EMAIL_USE_SSL = True
 EMAIL_HOST_USER = 'oladotunkolapo@gmail.com'
 EMAIL_HOST_PASSWORD = 'hitvrhdqdtectqsd'
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'django_errors.log'),
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -209,6 +227,9 @@ AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_URL = 'static/'
+
 
 STORAGES = {
     "default": {
@@ -220,5 +241,4 @@ STORAGES = {
 }
 MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/'
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATIC_URL = 'static/'
+
