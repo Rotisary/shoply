@@ -543,7 +543,10 @@ def search_view(request):
             if searched.exists():
 
                 # call get_cart_products function
-                cart_items = CartItem.objects.select_related('item').filter(user=request.user, cart=request.user.profile.cart)
+                cart_items = CartItem.objects.select_related('item').filter(
+                    user=request.user, 
+                    cart=request.user.profile.cart
+                    )
                 if cart_items.exists():
                     list = get_cart_products(cart_items)
                 else:

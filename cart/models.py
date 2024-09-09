@@ -92,8 +92,8 @@ class Order(models.Model):
         (GUARANTEE_TRUST_BANK, 'GTB')
     ]
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='orders',on_delete=models.CASCADE)
-    delivery_address = models.CharField(blank=True, null=True)
-    payment_option = models.CharField(choices=PAYMENT_CHOICES, default=PALMPAY, null=True, blank=True)
+    delivery_address = models.CharField(blank=False, null=False)
+    payment_option = models.CharField(choices=PAYMENT_CHOICES, default=PALMPAY, null=False, blank=False)
     attended_to = models.BooleanField(default=False)
     time_of_order = models.DateTimeField(default=timezone.now, verbose_name='created_at', blank=True, null=True)
 

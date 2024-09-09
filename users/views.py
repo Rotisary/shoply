@@ -17,7 +17,7 @@ from products.custom_functions import get_cart_products
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
-        if form.is_valid:
+        if form.is_valid():
             form.save()
             name = form.cleaned_data.get('username')
             messages.success(request, f"account has been created for {name}")
@@ -89,7 +89,10 @@ def wishlist_view(request, username):
     if wishlist_products.exists():
 
         # call get_cart_products function
-        cart_items = CartItem.objects.select_related('item').filter(user=request.user, cart=request.user.profile.cart)
+        cart_items = CartItem.objects.select_related('item').filter(
+            user=request.user, 
+            cart=request.user.profile.cart
+            )
         if cart_items.exists():
             list = get_cart_products(cart_items)
         else:
