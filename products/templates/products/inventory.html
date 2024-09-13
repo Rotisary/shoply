@@ -24,7 +24,7 @@
                         </div>
                     </ul>
                     <div class="card-footer" style="padding-left: 7rem;">
-                        {% if product.listed == True %}
+                        {% if product.is_listed == True %}
                             <a class="btn btn-outline-dark" id="prod-footer-link" href="{% url 'listing' product.id %}">listed</a>
                         {% else %}
                             <a class="btn btn-outline-dark" id="prod-footer-link" href="{% url 'listing' product.id %}">list</a>
