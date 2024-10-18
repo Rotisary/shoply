@@ -85,7 +85,7 @@ def add_to_wishlist(request, pk):
 
 @login_required()
 def wishlist_view(request, username):
-    wishlist_products = request.user.profile.wishlist.all()
+    wishlist_products = request.user.profile.wishlist.all().order_by('-time_added')
     if wishlist_products.exists():
 
         # call get_cart_products function

@@ -10,7 +10,7 @@ class CustomUser(AbstractUser):
         (BUYER, 'buyer'),
         (SELLER, 'seller'),
     ]
-    user_type = models.CharField(choices=USER_CHOICE, default=BUYER)
+    user_type = models.CharField(max_length=20, choices=USER_CHOICE, default=BUYER)
 
 
 class Profile(models.Model):

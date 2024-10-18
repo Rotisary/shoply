@@ -9,7 +9,7 @@ class CartItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='cart_items', on_delete=models.CASCADE)
     cart = models.ForeignKey('Cart', related_name='cart_items', on_delete=models.CASCADE, blank=True)
     item = models.ForeignKey(Product, related_name='cart_items_in', on_delete=models.DO_NOTHING, blank=True, null=True)
-    category = models.TextField(blank=True)
+    category = models.CharField(max_length=25, blank=True)
     quantity = models.IntegerField(default=1)
     seller = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='items_sold',  on_delete=models.DO_NOTHING, null=True)
     time_created = models.DateTimeField(auto_now_add=True, verbose_name='created_at', blank=True, null=True)
@@ -92,8 +92,8 @@ class Order(models.Model):
         (GUARANTEE_TRUST_BANK, 'GTB')
     ]
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='orders',on_delete=models.CASCADE)
-    delivery_address = models.CharField(blank=False, null=False)
-    payment_option = models.CharField(choices=PAYMENT_CHOICES, default=PALMPAY, null=False, blank=False)
+    delivery_address = models.CharField(max_length=100, blank=False, null=False)
+    payment_option = models.CharField(max_length=50, choices=PAYMENT_CHOICES, default=PALMPAY, null=False, blank=False)
     attended_to = models.BooleanField(default=False)
     time_of_order = models.DateTimeField(default=timezone.now, verbose_name='created_at', blank=True, null=True)
 

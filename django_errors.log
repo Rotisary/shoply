@@ -161,3 +161,152 @@ Traceback (most recent call last):
     raise ImproperlyConfigured(
 django.core.exceptions.ImproperlyConfigured: You're using the staticfiles app without having set the required STATIC_URL setting.
 "GET / HTTP/1.1" 500 145
+Internal Server Error: /login/
+Traceback (most recent call last):
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\HP\Documents\django-project\shoply\users\views.py", line 56, in LoginPage
+    return render(request, 'users/login.html', context)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: users/login.html
+"GET /login/ HTTP/1.1" 500 84555
+Internal Server Error: /login/
+Traceback (most recent call last):
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\HP\Documents\django-project\shoply\users\views.py", line 56, in LoginPage
+    return render(request, 'users/login.html', context)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: users/login.html
+"GET /login/ HTTP/1.1" 500 84692
+Internal Server Error: /login/
+Traceback (most recent call last):
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\HP\Documents\django-project\shoply\users\views.py", line 56, in LoginPage
+    return render(request, 'users/login.html', context)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: users/login.html
+"GET /login/ HTTP/1.1" 500 84692
+Internal Server Error: /login/
+Traceback (most recent call last):
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\HP\Documents\django-project\shoply\users\views.py", line 56, in LoginPage
+    return render(request, 'users/login.html', context)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: users/login.html
+"GET /login/ HTTP/1.1" 500 84692
+Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\base.py", line 883, in _resolve_lookup
+    current = current[bit]
+TypeError: 'ImageFieldFile' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\core\files\storage\handler.py", line 26, in __getitem__
+    return self._storages[alias]
+KeyError: 'default'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\core\files\storage\handler.py", line 29, in __getitem__
+    params = self.backends[alias]
+KeyError: 'default'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\HP\Documents\django-project\shoply\products\views.py", line 88, in products_list
+    return render(request, 'products/products.html', context)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\test\utils.py", line 114, in instrumented_test_render
+    return self.nodelist.render(context)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\test\utils.py", line 114, in instrumented_test_render
+    return self.nodelist.render(context)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\base.py", line 1008, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\defaulttags.py", line 243, in render
+    nodelist.append(node.render_annotated(context))
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\base.py", line 969, in render_annotated
+    return self.render(context)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\base.py", line 1067, in render
+    output = self.filter_expression.resolve(context)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\base.py", line 718, in resolve
+    obj = self.var.resolve(context)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\base.py", line 850, in resolve
+    value = self._resolve_lookup(context)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\template\base.py", line 893, in _resolve_lookup
+    current = getattr(current, bit)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\db\models\fields\files.py", line 70, in url
+    return self.storage.url(self.name)
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\utils\functional.py", line 251, in inner
+    self._setup()
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\core\files\storage\__init__.py", line 23, in _setup
+    self._wrapped = storages[DEFAULT_STORAGE_ALIAS]
+  File "C:\Users\HP\Documents\django-project\shoply-env\lib\site-packages\django\core\files\storage\handler.py", line 31, in __getitem__
+    raise InvalidStorageError(
+django.core.files.storage.handler.InvalidStorageError: Could not find config for 'default' in settings.STORAGES.
+"GET / HTTP/1.1" 500 219979

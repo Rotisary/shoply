@@ -3,8 +3,8 @@
     <h3>Welcome To Your Cart</h3>
     <div class="prod-content-section content-section">
         {% for product in page_obj %}
-            <div class="card prod-card mb-3" style="max-width: 540px;">
-                <div class="row g-0">
+            <div class="card mb-3" style="max-width: 540px;background-color: #f1f1f1;">
+                <div class="row g-0 cart-card">
                     <div class="col-md-4">
                         <img src="{{ product.item.image.url }}" class="img-fluid rounded-start" id="cart-img" alt="...">
                     </div>

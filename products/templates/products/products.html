@@ -3,8 +3,8 @@
 {% block content %}
     <div class="card-group prod-content-section">
         {% for product in page_obj %}
-            <div class="col mt-3" style="padding-bottom: 2rem; padding-top: 1rem;">
-                <div class="card prod-card mb-3 h-100" style="width: 18rem;">
+            <div class="col mt-3 column">
+                <div class="card prod-card mb-3 h-100">
                     <div class="card-header">
                         <ul class="nav nav-tabs card-header-tabs prod-list-group">
                             <li id="card-nav-item">
@@ -43,7 +43,7 @@
                             </li>
                         </ul>
                     </div>
-                    <img src="{{ product.image.url }}" class="card-img-top" alt="...">
+                    <img src="{{ product.image.url }}" class="card-img-top product-img" alt="...">
                     <div class="card-body">
                         <h5 class="card-title"><a class="link-text" href="{% url 'product-detail' product.id %}">{{ product.name }}</a></h5>
                         <p class="card-text">{{ product.description|truncatewords:25 }}</p>
@@ -64,11 +64,11 @@
                         </div>
                     {% else %}
                         {% if product in products_list %}
-                            <div class="card-footer" style="padding-left: 4rem;">
+                            <div class="card-footer remove-footer-pl">
                                 <div class="btn btn-outline-dark cart-toggle"><a id="prod-footer-link" href="{% url 'add-to-cart' product.id %}">Remove from Cart</a></div>
                             </div>
                         {% else %}
-                            <div class="card-footer" style="padding-left: 5rem;">
+                            <div class="card-footer add-footer-pl">
                                 <div class="btn btn-outline-dark cart-toggle"><a id="prod-footer-link" href="{% url 'add-to-cart' product.id %}">Add to Cart</a></div>
                             </div>
                         {% endif %}
@@ -78,7 +78,7 @@
         {% endfor %}
     </div>
         
-    <div style="padding-left: 32rem;">
+    <div class="paginator-link-group">
         {% if page_obj.has_previous %}
             <a class="btn btn-outline-dark mt-4 mb-3" href="?page=1">First</a>
             <a class="btn btn-outline-dark mt-4 mb-3" href="?page={{ page_obj.previous_page_number }}">Previous</a>

@@ -17,7 +17,7 @@ from .custom_functions import get_cart_products
 @login_required()
 @allowed_users(allowed_roles=['seller'])
 def inventory_list(request):
-    products = Product.objects.filter(seller=request.user)
+    products = Product.objects.filter(seller=request.user).order_by('-time_added')
     if products.exists():
 
         # paginate the queryset

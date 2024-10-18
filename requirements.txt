@@ -24,6 +24,7 @@ jsonfield==3.1.0
 kiwisolver==1.4.5
 lxml==5.2.2
 matplotlib==3.9.0
+mysqlclient==2.2.4
 numpy==1.26.4
 packaging==24.0
 Pillow==10.0.1
