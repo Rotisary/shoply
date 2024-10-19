@@ -170,15 +170,6 @@ main {
   padding-right: 10px;
 }
 
-/* .hamburger span {
-  display: block;
-  width: 20px;
-  height: 30px;
-  background: #f1f1f2;;
-  /* margin: 4px 0; 
-  transition: all 0.3s;
-} */
-
 @media (min-width: 768px){
 
   body{
@@ -199,19 +190,19 @@ main {
     display: flex;
     justify-content: space-between;
     margin: 0;
-    width: 30%;
+    width: 20%;
   }
   
   .search-bar {
     padding-top: 0.5rem;;
     width: 80%;
-    margin-left: 5rem;
+    margin-left: 2rem;
   }
 
   .nav-link-container {
     display: flex;
     justify-content: space-between;
-    margin-left: 10rem;
+    margin-left: 1rem;
   }
 
   .link-text {
@@ -355,6 +346,10 @@ main {
     object-fit: cover;
   }
 
+  .inventory-card-footer {
+    padding-left: 7rem;
+  }
+
   #img-overlay {
     height: 300px;
     width: 500px;
@@ -367,13 +362,6 @@ main {
     height: 100%;
     object-fit: cover;
   }
-
-  /* .cart-content-section {
-    height: 430px;
-    width:  900px;
-    margin-right: 250px;
-    padding: 1rem; 
-  } */
 
   #cart-card-footer {
     padding-left: 5rem;
@@ -448,8 +436,6 @@ main {
   .sidenav a {font-size: 18px;}
 }
 
-
-
 @media (max-width: 575.98px) {
   body {
     background-color: #f1f1f1;
@@ -459,18 +445,6 @@ main {
     min-width: 120%;
     min-height: 100%;
   }
-
-  /* .wrapper {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-  } */
-  
-  /* .site-header {
-    position: fixed;
-    top: 0;
-    min-width: 100%;
-  } */
 
   .nav-container {
     display: flex;
@@ -590,21 +564,6 @@ main {
     padding: 3px;
   }
 
-  /* .nav-items {
-    display: none;
-    position: absolute;
-    top: 60px;
-    left: 0;
-    width: 100%;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  } */
-
-  /* .nav-items li {
-      margin: 15px 0;
-    } */
-
   main {
     padding-top: 5rem;
   }
@@ -661,6 +620,10 @@ main {
     height: 250px;
     width: 398px;
     object-fit: cover;
+  }
+
+  .inventory-card-footer {
+    padding-left: 10rem;
   }
 
   #product-detail-img {

@@ -23,7 +23,7 @@
                             {% endif %}
                         </div>
                     </ul>
-                    <div class="card-footer" style="padding-left: 7rem;">
+                    <div class="card-footer inventory-card-footer">
                         {% if product.is_listed == True %}
                             <a class="btn btn-outline-dark" id="prod-footer-link" href="{% url 'listing' product.id %}">listed</a>
                         {% else %}

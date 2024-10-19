@@ -125,8 +125,8 @@ AUTH_USER_MODEL = "users.CustomUser"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 # DB_NAME = "postgres"
-# DB_USER = "postgres.xhneflzahgcvwpxgsesh"
-# DB_PASSWORD = "Supdb@01kol"
+# DB_USER = "******"
+# DB_PASSWORD = "*****"
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
