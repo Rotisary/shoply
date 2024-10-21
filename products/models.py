@@ -52,7 +52,7 @@ class Product(models.Model):
 class Review(models.Model):
     product = models.ForeignKey(Product, related_name='reviews', on_delete=models.CASCADE)
     writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    body = models.CharField(max_length=100)
+    body = models.TextField(blank=False)
     time_written = models.DateTimeField(auto_now_add=True, verbose_name='created_at', blank=True, null=True)
 
     
@@ -63,7 +63,7 @@ class Review(models.Model):
 class Reply(models.Model):
     review = models.ForeignKey(Review, related_name='replies', on_delete=models.CASCADE)
     replier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='replies', on_delete=models.CASCADE)
-    text = models.CharField(max_length=100)
+    text = models.TextField(blank=False)
     time_written = models.DateTimeField(auto_now_add=True, verbose_name='created_at', blank=True, null=True)
 
 
