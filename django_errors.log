@@ -523,3 +523,33 @@ Traceback (most recent call last):
     raise self.error(
 django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 46: 'cloudinary', expected 'empty' or 'endfor'. Did you forget to register or load this tag?
 "GET / HTTP/1.1" 500 254096
+Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\olado\Documents\django-projects\shoply\shoply-env\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\olado\Documents\django-projects\shoply\shoply-env\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\olado\Documents\django-projects\shoply\products\views.py", line 62, in products_list
+    if products.exists():
+  File "C:\Users\olado\Documents\django-projects\shoply\shoply-env\lib\site-packages\django\db\models\query.py", line 1288, in exists
+    return self.query.has_results(using=self.db)
+  File "C:\Users\olado\Documents\django-projects\shoply\shoply-env\lib\site-packages\django\db\models\sql\query.py", line 660, in has_results
+    return compiler.has_results()
+  File "C:\Users\olado\Documents\django-projects\shoply\shoply-env\lib\site-packages\django\db\models\sql\compiler.py", line 1542, in has_results
+    return bool(self.execute_sql(SINGLE))
+  File "C:\Users\olado\Documents\django-projects\shoply\shoply-env\lib\site-packages\django\db\models\sql\compiler.py", line 1561, in execute_sql
+    sql, params = self.as_sql()
+  File "C:\Users\olado\Documents\django-projects\shoply\shoply-env\lib\site-packages\django\db\models\sql\compiler.py", line 772, in as_sql
+    from_, f_params = self.get_from_clause()
+  File "C:\Users\olado\Documents\django-projects\shoply\shoply-env\lib\site-packages\django\db\models\sql\compiler.py", line 1141, in get_from_clause
+    clause_sql, clause_params = self.compile(from_clause)
+  File "C:\Users\olado\Documents\django-projects\shoply\shoply-env\lib\site-packages\django\db\models\sql\compiler.py", line 557, in compile
+    sql, params = node.as_sql(self, self.connection)
+  File "C:\Users\olado\Documents\django-projects\shoply\shoply-env\lib\site-packages\django\db\models\sql\datastructures.py", line 220, in as_sql
+    base_sql = compiler.quote_name_unless_alias(self.table_name)
+  File "C:\Users\olado\Documents\django-projects\shoply\shoply-env\lib\site-packages\django\db\models\sql\compiler.py", line 548, in quote_name_unless_alias
+    r = self.connection.ops.quote_name(name)
+  File "C:\Users\olado\Documents\django-projects\shoply\shoply-env\lib\site-packages\django\db\backends\dummy\base.py", line 20, in complain
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: settings.DATABASES is improperly configured. Please supply the ENGINE value. Check settings documentation for more details.
+"GET / HTTP/1.1" 500 145
