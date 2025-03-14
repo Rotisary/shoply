@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
+from cloudinary.models import CloudinaryField
 
 
 class ProductManager(models.Manager):
@@ -30,7 +31,7 @@ class Product(models.Model):
     seller = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='products', on_delete=models.CASCADE)
     category = models.CharField(max_length=25, choices=CATEGORY_CHOICES, default=ELECTRONICS)
     name = models.CharField(max_length=100)
-    image = models.ImageField(default='product_default.png')
+    image = CloudinaryField('image', use_filename=True, unique_filename=False, folder='shoply_product_images')
     price = models.FloatField()
     description = models.TextField(max_length=300, blank=True)
     stock = models.IntegerField()
@@ -69,8 +70,3 @@ class Reply(models.Model):
 
     def __str__(self):
         return f"{self.review.id}'s reply, reply No: {self.id}"
-
-    
-
-
-    

@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,27 +37,27 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'shoply-avpj.onrender.com']
 # Application definition
 
 INSTALLED_APPS = [
+
+    # my apps
     'products.apps.ProductsConfig',
     'users.apps.UsersConfig',
     'cart.apps.CartConfig',
-    'crispy_forms',
-    "crispy_bootstrap5",
+
+    # default apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',
+
+    # third party apps
+    'crispy_forms',
+    "crispy_bootstrap5",
+    'cloudinary',
     # 'debug_toolbar'
 ]
 
-# CACHES = {
-#     "default": {
-#         "BACKEND": "django.core.cache.backends.db.DatabaseCache",
-#         "LOCATION": "default_cache_table",
-#     }
-# }
 
 MIDDLEWARE = [
     # 'debug_toolbar.middleware.DebugToolbarMiddleware',
@@ -70,38 +74,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'shoply.urls'
 
-# CACHE_MIDDLEWARE_ALIAS = 'my-cache'
-
-# INTERNAL_IPS = [
-#     # '127.0.0.1',
-# ]
-
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:8000",
-    "http://localhost:8000",  
-    "https://shoply-avpj.onrender.com",  
-]
-
-
-CORS_ALLOW_CREDENTIALS = True
-
-
-CORS_ALLOW_HEADERS = [
-    'content-type',
-    'authorization',
-    'x-amz-acl',
-    'x-amz-meta-filename',
-]
-
-
-CORS_ALLOW_METHODS = [
-    'GET',
-    'POST',
-    'PUT',
-    'PATCH',
-    'DELETE',
-    'OPTIONS',
-]
 
 TEMPLATES = [
     {
@@ -124,29 +96,25 @@ AUTH_USER_MODEL = "users.CustomUser"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-# DB_NAME = "postgres"
-# DB_USER = "******"
-# DB_PASSWORD = "*****"
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': DB_NAME,
-#         'USER': DB_USER,
-#         'PASSWORD': DB_PASSWORD,
-#         'HOST': 'aws-0-eu-central-1.pooler.supabase.com',
-#         'PORT': 5432,
-#         # 'OPTIONS': {
-#         #     'sslmode': 'require',
-#         # }
-#     }
-# }
-DATABASES = {
-    'default': dj_database_url.config(
-        # Replace this value with your local database's connection string.
-        default= os.getenv('DATABASE_URL'),
-        conn_max_age=600
-    )
-}
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': 'localhost',
+            'PORT': 5432,
+        }
+    }
+else:
+    DATABASES = {
+        'default': dj_database_url.config(
+            # Replace this value with your local database's connection string.
+            default= os.getenv('DATABASE_URL'),
+            conn_max_age=600
+        )
+    }
 
 
 # Password validation
@@ -221,27 +189,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
-AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_REGION_NAME = 'us-east-1'
-AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-
-AWS_S3_FILE_OVERWRITE = False
-AWS_DEFAULT_ACL = None
-
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATIC_URL = 'static/'
 
 
 STORAGES = {
-    "default": {
-        "BACKEND": "storages.backends.s3.S3Storage",
-    },
+    "default": {},
     "staticfiles": {
         "BACKEND": 'whitenoise.storage.CompressedManifestStaticFilesStorage'  # Static files locally
     },
 }
-MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/'
 
 
