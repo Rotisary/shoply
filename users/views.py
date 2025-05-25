@@ -51,6 +51,9 @@ def LoginPage(request):
         if user is not None:
             login(request, user)
             return redirect('products')
+        else:
+            messages.error(request, 'invalid credentials!')
+            return redirect('login')
  
     context = {}
     return render(request, 'users/login.html', context)
