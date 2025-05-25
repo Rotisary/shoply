@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'shoply-avpj.onrender.com']
 
@@ -96,25 +96,25 @@ AUTH_USER_MODEL = "users.CustomUser"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-# if DEBUG:
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.postgresql',
-#             'NAME': os.getenv('DB_NAME'),
-#             'USER': os.getenv('DB_USER'),
-#             'PASSWORD': os.getenv('DB_PASSWORD'),
-#             'HOST': 'localhost',
-#             'PORT': 5432,
-#         }
-#     }
-# else:
-DATABASES = {
-    'default': dj_database_url.config(
-        # Replace this value with your local database's connection string.
-        default= os.getenv('DATABASE_URL'),
-        conn_max_age=600
-    )
-}
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': 'localhost',
+            'PORT': 5432,
+        }
+    }
+else:
+    DATABASES = {
+        'default': dj_database_url.config(
+            # Replace this value with your local database's connection string.
+            default= os.getenv('DATABASE_URL'),
+            conn_max_age=600
+        )
+    }
 
 
 # Password validation
